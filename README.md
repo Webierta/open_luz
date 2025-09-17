@@ -4,7 +4,6 @@
 
 Información detallada sobre la tarifa de la energía eléctrica en el mercado regulado (PVPC) en España para una gestión eficiente del consumo de electricidad.
 
-
 ## APP
 
 Esta App ofrece información general y detallada sobre el precio de la electricidad y las horas más baratas y más caras a lo largo de un día para facilitar el ajuste de los hábitos de consumo buscando el ahorro en la factura de la luz.
@@ -21,25 +20,25 @@ Los precios horarios son los mismos para todo el territorio español independien
 
 ## FUNCIONES PRINCIPALES
 
-- Sincroniza vía internet los últimos precios disponibles en el mercado regulado. Permite consultar los precios de la energía eléctrica de cualquier fecha (a partir del nuevo sistema tarifario.
+- **Actualiza ultimos precios**. Sincroniza vía internet los últimos precios disponibles en el mercado regulado. Permite consultar los precios de la energía eléctrica de cualquier fecha (a partir del nuevo sistema tarifario.
 
-- También permite consultar los precios en bloque de un rango de fechas. En este caso no se consultan los datos relativos a la generación eléctrica (renovabables / no renovables).
+- **Descarga datos en bloque**. También permite consultar los precios en bloque de un rango de fechas. En este caso no se consultan los datos relativos a la generación eléctrica (renovabables / no renovables).
 
-- Resalta las horas más caras y baratas del día y representa los datos en gráficos y tablas (evolución diaria del precio y horas ordenadas por precio).
+- **Presentación en tablas y gráficos**. Resalta las horas más caras y baratas del día y representa los datos en gráficos y tablas (evolución diaria del precio y horas ordenadas por precio).
 
-- Archiva los valores obtenidos y permite su consulta offline.
+- **Almacena datos**. Archiva los valores obtenidos y permite su consulta offline.
 
-- Calculadora de las franjas horarias más baratas del día (precios medios) para un intervalo determinado de tiempo. Por ejemplo, es útil para saber el mejor momento del día para poner consecutivamente la lavadora y la secadora.
+- **Calculadora**. Calcula las franjas horarias más baratas del día (precios medios) para un intervalo determinado de tiempo. Por ejemplo, es útil para saber el mejor momento del día para poner consecutivamente la lavadora y la secadora.
 
-- Obtiene información sobre el balance de generación entre energías renovables y no renovables.
+- **Balance de generación**. Obtiene información sobre el balance de generación entre energías renovables y no renovables.
 
 ## OTRAS HERRAMIENTAS
 
-- Comparador de los precios de distintas fechas (accesible desde el Archivo).
+- **Comparador de fechas**. Compara los precios de distintas fechas (accesible desde el Archivo).
 
-- Comparador de tarifas entre una factura (introducida en formato csv) y los precios PVPC.
+- **Comparador de facturas**. Comparador de tarifas entre una factura (introducida en formato csv) y los precios PVPC.
 
-- Consulta online la etiqueta energética de un aparato eléctrico para conocer su eficiencia energética.
+- **Etiqueta Energética**. Consulta online la etiqueta energética de un aparato eléctrico para conocer su eficiencia energética.
 
-- Información útil sobre el Bono Social.
+- **Bono Social**. Información útil sobre el Bono Social.
 
