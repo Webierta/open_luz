@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geekyants_flutter_gauges/geekyants_flutter_gauges.dart';
 
-import '../../../database/box_data.dart';
+import '../../../../../database/box_data.dart';
 
 class IndicadorPrecios extends StatelessWidget {
   final BoxData boxData;

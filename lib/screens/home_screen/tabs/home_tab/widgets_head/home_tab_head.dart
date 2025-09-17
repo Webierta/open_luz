@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../database/box_data.dart';
-import '../../../models/tarifa.dart';
-import '../../../theme/style_app.dart';
-import '../../../utils/estados.dart';
-import '../widgets/indicador_precios.dart';
+import '../../../../../database/box_data.dart';
+import '../../../../../models/tarifa.dart';
+import '../../../../../theme/style_app.dart';
+import '../../../../../utils/estados.dart';
+import 'indicador_precios.dart';
 
-class HeadHomeTab extends StatelessWidget {
+class HomeTabHead extends StatelessWidget {
   final BoxData boxData;
-  const HeadHomeTab({required this.boxData, super.key});
+  final bool isDesktopLayout;
+  const HomeTabHead({
+    required this.boxData,
+    super.key,
+    this.isDesktopLayout = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -117,18 +122,19 @@ class HeadHomeTab extends StatelessWidget {
           ),
           //const SizedBox(width: 8),
           //const Spacer(),
-          Column(
-            //crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'Rango de precios',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall!.copyWith(color: Colors.white),
-              ),
-              Expanded(child: IndicadorPrecios(boxData: boxData)),
-            ],
-          ),
+          if (!isDesktopLayout)
+            Column(
+              //crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Rango de precios',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall!.copyWith(color: Colors.white),
+                ),
+                Expanded(child: IndicadorPrecios(boxData: boxData)),
+              ],
+            ),
         ],
       ),
     );

@@ -12,8 +12,8 @@ import '../../utils/fecha_util.dart';
 import '../../utils/file_util.dart';
 import '../../utils/horario_verano.dart';
 import '../../utils/shared_prefs.dart';
-import 'graphics/grafico_precios.dart';
-import 'tabs/home_tab.dart';
+import 'widgets/grafico_precios.dart';
+import 'tabs/home_tab/home_tab.dart';
 import 'tabs/precios_tab.dart';
 import 'tabs/timelapse_tab.dart';
 import 'widgets/app_drawer.dart';
@@ -282,9 +282,11 @@ class _HomeScreenState extends State<HomeScreen> {
     mapDatePrecios.forEach((k, v) {
       storage.saveBoxData(BoxData(fecha: k, preciosHora: v));
     });
-    setState(
-      () => boxDataSelect = storage.getBoxData(mapDatePrecios.keys.first),
-    );
+    List<DateTime> listaFechas = mapDatePrecios.keys.toList();
+    listaFechas.sort((a, b) => a.compareTo(b));
+    setState(() {
+      boxDataSelect = storage.getBoxData(listaFechas.first);
+    });
     loadBoxData();
   }
 
@@ -607,6 +609,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       drawer: const AppDrawer(),
+
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),

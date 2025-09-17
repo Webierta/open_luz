@@ -2,13 +2,13 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../database/box_data.dart';
-import '../../../models/tarifa.dart';
-import '../../../theme/style_app.dart';
+import '../../../../../database/box_data.dart';
+import '../../../../../models/tarifa.dart';
+import '../../../../../theme/style_app.dart';
 
-class GraficoHome extends StatelessWidget {
+class EvolutionChart extends StatelessWidget {
   final BoxData boxData;
-  const GraficoHome({required this.boxData, super.key});
+  const EvolutionChart({required this.boxData, super.key});
 
   double cuatroDec(double precio) {
     return double.parse((precio).toStringAsFixed(4));

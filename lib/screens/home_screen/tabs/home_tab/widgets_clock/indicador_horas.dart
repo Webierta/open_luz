@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geekyants_flutter_gauges/geekyants_flutter_gauges.dart';
 
-import '../../../database/box_data.dart';
-import '../../../models/tarifa.dart';
-import '../../../theme/style_app.dart';
-import '../../../utils/estados.dart';
+import '../../../../../database/box_data.dart';
+import '../../../../../models/tarifa.dart';
+import '../../../../../theme/style_app.dart';
+import '../../../../../utils/estados.dart';
 
 class IndicadorHoras extends StatefulWidget {
   final BoxData boxData;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../utils/estados.dart';
+import '../../../../../utils/estados.dart';
 
 class GeneracionBalance extends StatelessWidget {
   final Map<String, double> sortedMap;

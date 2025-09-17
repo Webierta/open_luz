@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/tarifa.dart';
-import '../../../utils/estados.dart';
+import '../../../../../models/tarifa.dart';
+import '../../../../../utils/estados.dart';
 
 class ListTileFecha extends StatelessWidget {
   final Periodo periodo;

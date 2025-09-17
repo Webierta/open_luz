@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../utils/estados.dart';
+import '../../../../../utils/estados.dart';
 
 const TextStyle textBlanco = TextStyle(color: Colors.white);
 const TextStyle textBlanco70 = TextStyle(color: Colors.white70);

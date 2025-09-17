@@ -20,7 +20,7 @@ Los precios horarios son los mismos para todo el territorio español independien
 
 ## FUNCIONES PRINCIPALES
 
-- **Actualiza ultimos precios**. Sincroniza vía internet los últimos precios disponibles en el mercado regulado. Permite consultar los precios de la energía eléctrica de cualquier fecha (a partir del nuevo sistema tarifario.
+- **Actualiza últimos precios**. Sincroniza vía internet los últimos precios disponibles en el mercado regulado. Permite consultar los precios de la energía eléctrica de cualquier fecha (a partir del nuevo sistema tarifario.
 
 - **Descarga datos en bloque**. También permite consultar los precios en bloque de un rango de fechas. En este caso no se consultan los datos relativos a la generación eléctrica (renovabables / no renovables).
 
