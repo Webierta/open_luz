@@ -166,6 +166,7 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: StyleApp.kBoxDeco,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -200,6 +201,7 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
                 ),
                 const Spacer(flex: 2),
                 Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(

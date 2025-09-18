@@ -12,6 +12,7 @@ class HomeTabReloj extends StatelessWidget {
   Widget build(BuildContext context) {
     final double altoScreen = MediaQuery.of(context).size.height;
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Padding(
           padding: EdgeInsets.only(left: 6),
@@ -31,7 +32,8 @@ class HomeTabReloj extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        Align(
+
+        /*Align(
           alignment: Alignment.centerLeft,
           child: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: altoScreen / 1.4),
@@ -40,6 +42,13 @@ class HomeTabReloj extends StatelessWidget {
               aspectRatio: 5 / 4,
               child: IndicadorHoras(boxData: boxData),
             ),
+          ),
+        ),*/
+        Align(
+          alignment: Alignment.centerLeft,
+          child: AspectRatio(
+            aspectRatio: 5 / 4, //5 / 4, //5 / 4,
+            child: IndicadorHoras(boxData: boxData),
           ),
         ),
       ],
