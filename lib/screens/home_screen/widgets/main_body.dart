@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../theme/style_app.dart';
 import '../../../utils/estados.dart';
-//import '../../settings_screens/settings_screen.dart';
 import '../home_screen.dart';
 
 class MainBodyEmpty extends StatelessWidget {
-  //final String tokenSaved;
   //const MainBodyEmpty({super.key, required this.tokenSaved});
   const MainBodyEmpty({super.key});
 
@@ -35,47 +33,6 @@ class MainBodyEmpty extends StatelessWidget {
                 color: StyleApp.onBackgroundColor,
               ),
             ),
-            /*(tokenSaved == 'token' || tokenSaved == '')
-                ? RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text:
-                              'La aplicación utiliza un código de acceso personal (token) como clave de '
-                              'acceso al sistema REData de REE.\n\nUtiliza tu token y obtén más información en',
-                          style: textTheme.bodyLarge!.copyWith(
-                            color: StyleApp.onBackgroundColor,
-                          ),
-                        ),
-                        WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
-                          child: TextButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SettingsScreen(),
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.settings),
-                            label: Text(
-                              'Ajustes',
-                              style: textTheme.bodyLarge!.copyWith(
-                                color: StyleApp.onBackgroundColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Text(
-                    'Descarga los últimos datos de la tarifa PVPC',
-                    style: textTheme.bodyLarge!.copyWith(
-                      color: StyleApp.onBackgroundColor,
-                    ),
-                  ),*/
           ],
         ),
       ),
@@ -115,10 +72,10 @@ class CheckStatusError {
 
   (String, String) get tituloMsg {
     return switch (status) {
-      Status.errorToken => (
+      /*Status.errorToken => (
         'Error Token',
         'Acceso denegado.\nComprueba tu token personal.',
-      ),
+      ),*/
       Status.noAcceso => ('Error', 'Error en la respuesta a la petición web'),
       Status.tiempoExcedido => (
         'Error',

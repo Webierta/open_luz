@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/estados.dart';
 import 'datos_balance.dart';
@@ -33,17 +32,6 @@ class RequestRee {
   List<Balance> get balanceNoRenovables =>
       balances.where((b) => b.renovable == false).toList();
 
-  //String token = '';
-
-  /*initToken() async {
-    token = await getToken();
-  }
-
-  Future<String> getToken() async {
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token') ?? '';
-  }*/
-
   Map<String, String> get headersApiEsios => {
     'Accept': 'application/json; application/vnd.esios-api-v1+json',
     'Content-Type': 'application/json',
@@ -57,39 +45,13 @@ class RequestRee {
     'Host': 'apidatos.ree.es',
   };
 
-  /*Future<void> datePVPCToken(String? fecha) async {
-    //fecha formato = 2025-04-25
-    String url = fecha != null
-        ? '$urlIndicator1001?date=${fecha}T00:00'
-        : urlIndicator1001;
-    try {
-      var response = await http.get(Uri.parse(url), headers: headersApiEsios);
-      if (response.body.contains('Access denied')) {
-        status = Status.accessDenied;
-      } else if (response.statusCode == 200) {
-        Map<String, dynamic> objJson = jsonDecode(response.body);
-        // TODO: datos from json
-      } else {
-        status = Status.noAcceso;
-      }
-    } on TimeoutException catch (_) {
-      status = Status.tiempoExcedido;
-    } on SocketException {
-      status = Status.noInternet;
-    } on Error {
-      status = Status.error;
-    }
-  }*/
-
   Future<List<double>> datePVPC(String? fecha) async {
     // 2024-03-15
     String url = fecha != null ? '$urlArchive70?date=$fecha' : urlArchive70;
-
     try {
       var response = await http.get(Uri.parse(url), headers: headersApiEsios);
       if (response.statusCode == 200) {
         Map<String, dynamic> objJson = jsonDecode(response.body);
-        // TODO: datos from json
         if (fecha == null) {
           List<dynamic> listaPVPC = objJson['PVPC'];
           fecha = listaPVPC.first['Dia']; //15/03/2024
@@ -98,34 +60,12 @@ class RequestRee {
           fechaRequest = fecha;
         }
         var preciosHora = JsonPVPC(objJson: objJson, fecha: fecha).read();
-
         if (preciosHora.isEmpty || preciosHora.length != 24) {
           status = Status.error;
           return [];
         }
-        //status = preciosHora.length == 24 ? Status.ok : Status.error;
         status = Status.ok;
         return preciosHora;
-        //return JsonPVPC(objJson: objJson, fecha: fecha!).read();
-
-        /*var datosJson = DatosJson.fromJson(objJson);
-        List<String> listaPrecios = <String>[];
-        for (var obj in datosJson.datosPVPC) {
-          listaPrecios.add(obj.precio);
-        }
-        for (var precio in listaPrecios) {
-          //var precioDouble = roundDouble((double.tryParse(precio.replaceAll(',', '.'))! / 1000), 5);
-          var precioDouble =
-              double.tryParse(precio.replaceAll(',', '.'))! / 1000;
-          preciosHora.add(precioDouble);
-        }
-        var dateDT = DateFormat('dd-MM-yyyy').parse(fecha!);
-        var fechaString = DateFormat('yyyy-MM-dd').format(dateDT);
-        if (HorarioVerano.check(fechaString)) {
-          preciosHora.insert(2, 0);
-        }
-        status = preciosHora.length == 24 ? Status.ok : Status.error;*/
-        //return preciosHora;
       } else {
         status = Status.noAcceso;
       }

@@ -5,38 +5,54 @@ import '../../../../../database/box_data.dart';
 
 class IndicadorPrecios extends StatelessWidget {
   final BoxData boxData;
-
   const IndicadorPrecios({super.key, required this.boxData});
 
   List<RangeLinearGauge> getRangeLinear() {
     //final double precioMin = double.parse(boxData.precioMin.toStringAsFixed(4));
     final double precioMax = double.parse(boxData.precioMax.toStringAsFixed(4));
-
     return [
       RangeLinearGauge(
-        color: Colors.lightGreen,
+        color: Colors.lightGreen, // Color(0xFFDCEDC8), //  Colors.lightGreen,
         start: 0,
         end: precioMax < 0.10 ? precioMax : 0.10,
       ),
       if (precioMax > 0.10)
         RangeLinearGauge(
           color: Colors.yellow.shade200,
+          //Color(0xFFFFF9C4), //Colors.yellow.shade200,
           start: 0.10,
           end: precioMax < 0.15 ? precioMax : 0.15,
         ),
       if (precioMax > 0.15)
         RangeLinearGauge(
-          color: Colors.red.shade200,
+          color:
+              Colors.red.shade200, //Color(0xFFFFCDD2), //Colors.red.shade200,
           start: 0.15,
           end: precioMax,
         ),
     ];
   }
 
+  /*Color getColorBar() {
+    var precio = boxData.getPrecio(
+      boxData.preciosHora,
+      DateTime.now().toLocal().hour,
+    );
+    //return Tarifa.getColorBorder(precio);
+    //return Tarifa.getColorCara(preciosHoras, valor);
+    if (precio < 0.10) {
+      return const Color(0xFF388E3C);
+    } else if (precio < 0.15) {
+      return Colors.yellowAccent.shade700;
+      //return const Color(0xFFFFA000);
+    } else {
+      return const Color(0xFFE64A19);
+    }
+  }*/
+
   @override
   Widget build(BuildContext context) {
     final hora = DateTime.now().toLocal().hour;
-    //final hora = boxData.fecha.hour;
     final precios = boxData.preciosHora;
     final precioMin = double.parse(boxData.precioMin.toStringAsFixed(4));
     final precioMax = double.parse(boxData.precioMax.toStringAsFixed(4));
@@ -50,14 +66,27 @@ class IndicadorPrecios extends StatelessWidget {
         showLabel: true,
         textStyle: TextStyle(color: Colors.white),
         showSecondaryRulers: false,
-        secondaryRulerColor: Colors.white,
       ),
+      valueBar: [
+        ValueBar(
+          value: double.parse(
+            boxData.getPrecio(precios, hora).toStringAsFixed(4),
+          ),
+          //color: getColorBar(),
+          color: Colors.black54,
+          borderRadius: 20,
+          edgeStyle: LinearEdgeStyle.endCurve,
+          valueBarThickness: 30,
+          //offset: 20,
+          //position: ValueBarPosition.left,
+        ),
+      ],
       gaugeOrientation: GaugeOrientation.vertical,
       start: 0, //precioMin,
       end: precioMax,
       steps: 1,
       rangeLinearGauge: getRangeLinear(),
-      linearGaugeBoxDecoration: LinearGaugeBoxDecoration(thickness: 10),
+      linearGaugeBoxDecoration: LinearGaugeBoxDecoration(thickness: 40),
       pointers: [
         if (precioMax > 0.1)
           Pointer(
@@ -79,7 +108,7 @@ class IndicadorPrecios extends StatelessWidget {
             showLabel: true,
             labelStyle: TextStyle(fontSize: 12),
           ),
-        Pointer(
+        /*Pointer(
           value: double.parse(
             boxData.getPrecio(precios, hora).toStringAsFixed(4),
           ),
@@ -89,8 +118,8 @@ class IndicadorPrecios extends StatelessWidget {
           //height: 14,
           //width: 14,
           pointerPosition: PointerPosition.left,
-          //showLabel: true,
-        ),
+          showLabel: false,
+        ),*/
         /*Pointer(
           value:
               double.parse(boxData.getPrecio(precios, hora).toStringAsFixed(4)),

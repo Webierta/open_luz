@@ -1,33 +1,21 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme/style_app.dart';
+import '../../utils/constantes.dart';
+import '../../utils/launch_url.dart';
 import 'widgets/head_screen.dart';
 
 const String btcAddress = '15ZpNzqbYFx9P7wg4U438JMwZr2q3W6fkS';
 const String urlPayPal =
     'https://www.paypal.com/donate?hosted_button_id=986PSAHLH6N4L';
-const String urlGitHub = 'https://github.com/Webierta/tarifa_luz/issues';
 
 class DonateScreen extends StatelessWidget {
   const DonateScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Future<void> launchURL(String url) async {
-      if (!await launchUrl(
-        Uri.parse(url),
-        mode: LaunchMode.externalApplication,
-      )) {
-        if (!context.mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Could not launch $url')));
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(title: const Text('Buy Me a Coffee')),
       body: SafeArea(
@@ -36,12 +24,9 @@ class DonateScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: 20),
-            //padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
             child: Column(
               children: [
                 const HeadScreen(),
-                const Icon(Icons.favorite_border, size: 60),
-                //Divider(color: Theme.of(context).colorScheme.onBackground),
                 Divider(color: Theme.of(context).colorScheme.onSurface),
                 const SizedBox(height: 10.0),
                 Align(
@@ -69,7 +54,8 @@ class DonateScreen extends StatelessWidget {
                         ),
                         text: 'GitHub issues.',
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => launchURL(urlGitHub),
+                          ..onTap = () =>
+                              LaunchUrl.init(context, url: kGitHubIssues),
                       ),
                     ],
                   ),
@@ -196,7 +182,7 @@ class DonateScreen extends StatelessWidget {
                       elevation: 10.0,
                       padding: const EdgeInsets.all(10),
                     ),
-                    onPressed: () => launchURL(urlPayPal),
+                    onPressed: () => LaunchUrl.init(context, url: urlPayPal),
                     child: Image.asset('assets/images/paypal_logo.png'),
                   ),
                 ),

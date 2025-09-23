@@ -102,15 +102,6 @@ class _StorageScreenState extends State<StorageScreen> {
           ),
         );
       },
-      /* onPopInvoked: (didPop) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(isFirstLaunch: false),
-          ),
-        );
-      }, */
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Archivo'),

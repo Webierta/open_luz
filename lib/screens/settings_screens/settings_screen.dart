@@ -13,8 +13,6 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final controllerToken = TextEditingController();
   final SharedPrefs sharedPrefs = SharedPrefs();
-  //String token = '';
-  //bool tokenVisible = false;
   bool autoGetData = true;
   //bool autoSave = true;
   int maxArchivo = 0;
@@ -30,24 +28,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void loadSharedPrefs() async {
     await sharedPrefs.init();
     setState(() {
-      //token = sharedPrefs.token;
       autoGetData = sharedPrefs.autoGetData;
       //autoSave = sharedPrefs.autoSave;
       maxArchivo = sharedPrefs.maxArchivo;
       maxArchivoText = getMaxArchivoText(maxArchivo);
       storageComparador = sharedPrefs.storageComparador;
     });
-    //controllerToken.text = token;
   }
-
-  /*void setToken() {
-    token = controllerToken.text.trim().isEmpty ? '' : controllerToken.text;
-    //sharedPrefs.token = token;
-    //if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Token guardado')));
-  }*/
 
   void setAutoGetData(bool value) {
     setState(() => autoGetData = value);
@@ -113,7 +100,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) {
-        //setToken();
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         Navigator.push(
           context,
@@ -122,16 +108,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         );
       },
-      /* onPopInvoked: (didPop) {
-        setToken();
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(isFirstLaunch: false),
-          ),
-        );
-      }, */
       child: Scaffold(
         appBar: AppBar(title: const Text('Ajustes')),
         body: SafeArea(
@@ -143,45 +119,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /*ListTile(
-                    title: TextField(
-                      controller: controllerToken,
-                      obscureText: !tokenVisible,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                        labelText: 'Token',
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            tokenVisible
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            if (tokenVisible) {
-                              FocusScope.of(context).unfocus();
-                            }
-                            setState(() => tokenVisible = !tokenVisible);
-                          },
-                        ),
-                      ),
-                    ),
-                    subtitle: TextButton.icon(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const InfoTokenScreen(),
-                        ),
-                      ),
-                      icon: const Icon(Icons.info_outline),
-                      label: const Text('Info sobre el token'),
-                      style: TextButton.styleFrom(
-                        alignment: Alignment.bottomLeft,
-                      ),
-                    ),
-                  ),*/
-                  //const Divider(height: 40, color: StyleApp.onBackgroundColor),
                   ListTile(
                     horizontalTitleGap: 8,
                     isThreeLine: true,

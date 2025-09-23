@@ -8,6 +8,7 @@ import '../widgets_evolution_chart/home_tab_evolution.dart';
 import '../widgets_head/home_tab_head.dart';
 import '../widgets_head/rango_precios.dart';
 import '../widgets_horas/home_tab_horas.dart';
+import 'layout.dart';
 
 class TabletLayout extends StatelessWidget {
   final BoxConstraints parentConstraints;
@@ -38,22 +39,70 @@ class TabletLayout extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
+
+                /*SizedBox(
+                  height: 500,
+                  child: IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 4, //10,
+                          child: HomeTabReloj(boxData: boxData),
+                        ),
+                        Spacer(flex: 1),
+                        Expanded(
+                          flex: 10,
+                          child: HomeTabHoras(
+                            boxData: boxData,
+                            isMobileLayout: false,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),*/
                 IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(flex: 10, child: HomeTabReloj(boxData: boxData)),
+                      Expanded(
+                        flex: 14,
+                        child: HomeTabReloj(
+                          boxData: boxData,
+                          layout: Layout.TabletLayout,
+                        ),
+                      ),
                       Spacer(flex: 1),
                       Expanded(
-                        flex: 10,
+                        flex: 14,
                         child: HomeTabHoras(
                           boxData: boxData,
-                          isMobileLayout: false,
+                          layout: Layout.TabletLayout,
                         ),
                       ),
                     ],
                   ),
                 ),
+
+                /*SizedBox(
+                  width: double.maxFinite,
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    spacing: 5.0,
+                    runSpacing: 10.0,
+                    children: [
+                      SizedBox(
+                        width: constraints.maxWidth / 2.1,
+                        child: HomeTabReloj(boxData: boxData),
+                      ),
+                      SizedBox(
+                        width: constraints.maxWidth / 2.1,
+                        child: HomeTabHoras(boxData: boxData),
+                      ),
+                    ],
+                  ),
+                ),*/
                 const SizedBox(height: 20),
                 HomeTabEvolution(boxData: boxData),
                 const SizedBox(height: 20),

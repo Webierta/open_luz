@@ -41,16 +41,21 @@ class HomeTabGeneracion extends StatelessWidget {
       children: [
         const Padding(
           padding: EdgeInsets.only(left: 6),
-          child: Row(
-            children: [
-              Text(
-                '⚡ Balance Generación',
-                style: TextStyle(
-                  color: StyleApp.onBackgroundColor,
-                  fontSize: 16,
-                ),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: FittedBox(
+              child: Row(
+                children: [
+                  Text(
+                    '⚡ Balance Generación',
+                    style: TextStyle(
+                      color: StyleApp.onBackgroundColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
         const SizedBox(height: 4),

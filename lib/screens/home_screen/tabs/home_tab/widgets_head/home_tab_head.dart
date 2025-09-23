@@ -8,12 +8,7 @@ import '../../../../../utils/estados.dart';
 
 class HomeTabHead extends StatelessWidget {
   final BoxData boxData;
-  //final bool isDesktopLayout;
-  const HomeTabHead({
-    required this.boxData,
-    super.key,
-    //this.isDesktopLayout = false,
-  });
+  const HomeTabHead({required this.boxData, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +19,10 @@ class HomeTabHead extends StatelessWidget {
     );
     var desviacion = boxData.preciosHora[now.hour] - boxData.precioMedio;
     //Color color = Tarifa.getColorCara(boxData.preciosHora, precioNow);
-    RangoHoras rango = Tarifa.getRangoHora(boxData.preciosHora, precioNow);
+    RangoHorasBombilla rango = Tarifa.getRangoHora(
+      boxData.preciosHora,
+      precioNow,
+    );
 
     /*int indexPrecio() {
       Map<int, double> mapPreciosOrdenados =
@@ -37,7 +35,7 @@ class HomeTabHead extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FittedBox(
-          fit: BoxFit.contain,
+          fit: BoxFit.scaleDown,
           child: Text(
             '${boxData.fechaddMMyy} a las ${DateFormat('HH:mm').format(now)}',
             style: const TextStyle(color: Colors.white, fontSize: 16),
@@ -46,61 +44,92 @@ class HomeTabHead extends StatelessWidget {
         const SizedBox(height: 10),
         FittedBox(
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                precioNow.toStringAsFixed(5),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 80,
-                  fontWeight: FontWeight.w100,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
-              ),
-              const Text(
-                '€/kWh',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 20, 10),
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      Text(
+                        precioNow.toStringAsFixed(5),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 60,
+                          fontWeight: FontWeight.w100,
+                        ),
+                      ),
+                      const Text(
+                        '€/kWh',
+                        style: TextStyle(fontSize: 10, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
         ),
+        const SizedBox(height: 10),
         const Spacer(),
         ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: Tarifa.getIconPeriodo(periodoAhora),
-          title: Text('Periodo ${periodoAhora.name.toUpperCase()}'),
-        ),
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          /*leading: Text(
-            Tarifa.getEmojiCara(boxData.preciosHora, precioNow),
-            style: TextStyle(fontSize: 20),
-          ),*/
-          /*leading: AnimatedEmoji(
-            Tarifa.getEmojiCaraAnimated(boxData.preciosHora, precioNow),
-          ),*/
-          leading: Text(
-            Tarifa.getEmojiCara(boxData.preciosHora, precioNow),
-            style: StyleApp.textFontEmoji.copyWith(fontSize: 22),
-            /*style: TextStyle(
-              fontFamily: 'Noto Color Emoji',
-              fontSize: 20, // 32, // Emoji pop!
-            ),*/
+          leading: Container(
+            decoration: BoxDecoration(
+              color: Colors.black87,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Tarifa.getIconPeriodo(periodoAhora, size: 38),
           ),
-
           title: FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(rango.description),
+            child: Text(
+              'Periodo ${periodoAhora.name.toUpperCase()}',
+              style: TextStyle(fontSize: 14),
+            ),
           ),
         ),
         ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: Icon(
-            desviacion > 0 ? Icons.upload : Icons.download,
-            color: desviacion > 0 ? Colors.red : Colors.green,
+          leading: Container(
+            decoration: BoxDecoration(
+              color: Colors.black87,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Image.asset(
+              width: 38,
+              Tarifa.getBombilla(boxData.preciosHora, precioNow),
+            ),
           ),
-          title: Text('${desviacion.toStringAsFixed(4)} €', style: TextStyle()),
+          title: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(rango.description, style: TextStyle(fontSize: 14)),
+          ),
+        ),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: Container(
+            decoration: StyleApp.kIconDeco,
+            child: Icon(
+              desviacion > 0 ? Icons.upload : Icons.download,
+              color: desviacion > 0 ? Colors.red : Colors.green,
+              size: 38,
+            ),
+          ),
+          title: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '${desviacion.toStringAsFixed(4)} €',
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
         ),
         const Spacer(),
       ],

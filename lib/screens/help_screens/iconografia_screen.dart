@@ -10,13 +10,11 @@ class IconografiaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Divider divider = Divider(
       height: 0.1,
-      //color: Theme.of(context).colorScheme.background.withOpacity(0.2),
       color: Theme.of(context).colorScheme.surface.withAlpha(20),
     );
 
     TextStyle labelMediumDark = Theme.of(context).textTheme.labelMedium!
         .copyWith(color: Theme.of(context).colorScheme.surface);
-    //.copyWith(color: Theme.of(context).colorScheme.background);
 
     const Color backgroundCard = StyleApp.blueGrey50;
 
@@ -28,7 +26,6 @@ class IconografiaScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           height: double.infinity,
           child: SingleChildScrollView(
-            //padding: const EdgeInsets.all(20.0),
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,15 +73,26 @@ class IconografiaScreen extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       ListTile(
-                        leading: const Icon(
-                          Icons.download,
-                          color: Colors.green,
+                        leading: Container(
+                          decoration: StyleApp.kIconDeco,
+                          child: const Icon(
+                            Icons.download,
+                            color: Colors.green,
+                            size: 40,
+                          ),
                         ),
                         title: Text('Inferior', style: labelMediumDark),
                       ),
                       divider,
                       ListTile(
-                        leading: const Icon(Icons.upload, color: Colors.red),
+                        leading: Container(
+                          decoration: StyleApp.kIconDeco,
+                          child: const Icon(
+                            Icons.upload,
+                            color: Colors.red,
+                            size: 40,
+                          ),
+                        ),
                         title: Text('Superior', style: labelMediumDark),
                       ),
                     ],
@@ -101,18 +109,12 @@ class IconografiaScreen extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       ListTile(
-                        /*leading: Icon(
-                          Icons.sentiment_very_satisfied,
-                          size: 30,
-                          color: Colors.green[700],
-                        ),*/
-                        leading: Text(
-                          RangoHoras.baratas.emoji,
-                          style: StyleApp.textFontEmoji.copyWith(fontSize: 22),
-                          /*style: TextStyle(
-                            fontSize: 22,
-                            fontFamily: 'Noto Color Emoji',
-                          ),*/
+                        contentPadding: EdgeInsets.all(10),
+                        leading: Container(
+                          decoration: StyleApp.kIconDeco,
+                          child: Image.asset(
+                            RangoHorasBombilla.baratas.bombilla,
+                          ),
                         ),
                         title: Text(
                           '8 horas más baratas',
@@ -121,18 +123,12 @@ class IconografiaScreen extends StatelessWidget {
                       ),
                       divider,
                       ListTile(
-                        /*leading: Icon(
-                          Icons.sentiment_neutral,
-                          size: 30,
-                          color: Colors.amber[700],
-                        ),*/
-                        leading: Text(
-                          RangoHoras.intermedias.emoji,
-                          style: StyleApp.textFontEmoji.copyWith(fontSize: 22),
-                          /*style: TextStyle(
-                            fontSize: 22,
-                            fontFamily: 'Noto Color Emoji',
-                          ),*/
+                        contentPadding: EdgeInsets.all(10),
+                        leading: Container(
+                          decoration: StyleApp.kIconDeco,
+                          child: Image.asset(
+                            RangoHorasBombilla.intermedias.bombilla,
+                          ),
                         ),
                         title: Text(
                           '8 horas intermedias',
@@ -141,19 +137,10 @@ class IconografiaScreen extends StatelessWidget {
                       ),
                       divider,
                       ListTile(
-                        /*leading: Icon(
-                          Icons.sentiment_very_dissatisfied,
-                          size: 30,
-                          color: Colors.deepOrange[700],
-                        ),*/
-                        leading: Text(
-                          RangoHoras.caras.emoji,
-                          style: StyleApp.textFontEmoji.copyWith(fontSize: 22),
-
-                          /*style: TextStyle(
-                            fontSize: 22,
-                            fontFamily: 'Noto Color Emoji',
-                          ),*/
+                        contentPadding: EdgeInsets.all(10),
+                        leading: Container(
+                          decoration: StyleApp.kIconDeco,
+                          child: Image.asset(RangoHorasBombilla.caras.bombilla),
                         ),
                         title: Text(
                           '8 horas más caras',
@@ -174,7 +161,6 @@ class IconografiaScreen extends StatelessWidget {
                 ),
                 Card(
                   elevation: 4.0,
-                  //color: Colors.blue[50],
                   color: backgroundCard,
                   child: Container(
                     padding: const EdgeInsets.all(20.0),
@@ -189,7 +175,6 @@ class IconografiaScreen extends StatelessWidget {
                               color: const Color(0xFFDCEDC8),
                               border: Border.all(),
                             ),
-                            //Colors.lightGreen[100]
                             child: Text(
                               '< 0,10',
                               textAlign: TextAlign.center,
@@ -314,7 +299,10 @@ class ContainerPeriodo extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Icon(icono, color: colorIcono, size: 40),
+                  Container(
+                    decoration: StyleApp.kIconDeco,
+                    child: Icon(icono, color: colorIcono, size: 40),
+                  ),
                 ],
               ),
             ),

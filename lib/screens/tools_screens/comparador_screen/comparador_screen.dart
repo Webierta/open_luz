@@ -20,7 +20,6 @@ import '../../home_screen/home_screen.dart';
 import 'widgets/comparador_aviso.dart';
 import 'widgets/comparador_resultado.dart';
 
-const String urlGitHub = 'https://github.com/Webierta/tarifa_luz/issues';
 typedef LineaCsv = ({String fecha, int hora, double consumo});
 
 class Comparador extends StatefulWidget {

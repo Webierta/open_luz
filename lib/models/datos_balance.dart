@@ -60,7 +60,9 @@ class JsonBalance {
           }
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      return generacion;
+    }
 
     if (balances.isEmpty) {
       return generacion;

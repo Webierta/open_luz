@@ -231,8 +231,6 @@ class _GraficoCompareState extends State<GraficoCompare> {
                                   true,
                               gradient: LinearGradient(
                                 colors: [
-                                  //getColor(widget.boxDataList.indexOf(boxData)).withOpacity(0.5),
-                                  //getColor(widget.boxDataList.indexOf(boxData)).withOpacity(0),
                                   getColor(
                                     widget.boxDataList.indexOf(boxData),
                                   ).withAlpha(50),

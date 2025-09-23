@@ -7,7 +7,6 @@ environment:
   sdk: ^3.9.2
 
 dependencies:
-  animated_emoji: ^3.2.1
   archive: ^4.0.7
   csv: ^6.0.0
   dio: ^5.9.0
@@ -17,6 +16,7 @@ dependencies:
   fl_chart: ^1.1.0
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
   flutter_localizations:
     sdk: flutter
   flutter_svg: ^2.2.1
@@ -39,6 +39,15 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   build_runner: ^2.4.13
+  
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path_android: assets/icon/pvpc_icon.png
+  image_path_ios: assets/icon/pvpc_ios.png
+  adaptive_icon_background: "#1565c0"
+  #adaptive_icon_background: assets/icon/ic_background.png
+  adaptive_icon_foreground: assets/icon/ic_foreground.png
 
 flutter:
   uses-material-design: true

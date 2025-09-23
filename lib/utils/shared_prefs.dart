@@ -4,8 +4,6 @@ import 'constantes.dart';
 
 class SharedPrefs {
   static SharedPreferences? _sharedPrefs;
-
-  //static const String _token = keyToken;
   static const String _autoGetData = keyAutoGetData;
   static const String _maxArchivo = keyMaxArchivo;
   static const String _storageComparador = keyStorageComparador;
@@ -15,10 +13,6 @@ class SharedPrefs {
   Future<void> init() async {
     _sharedPrefs ??= await SharedPreferences.getInstance();
   }
-
-  //String get token => _sharedPrefs?.getString(_token) ?? '';
-
-  //set token(String value) => _sharedPrefs?.setString(_token, value);
 
   bool get autoGetData => _sharedPrefs?.getBool(_autoGetData) ?? true;
 

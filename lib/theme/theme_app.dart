@@ -6,21 +6,8 @@ class ThemeApp {
     seedColor: const Color(0xFF607D8B), // bluegrey
   );
 
-  //TextTheme get textTheme => GoogleFonts.latoTextTheme().merge(Typography().white);
-  /* TextTheme get textTheme =>
-      const TextTheme().apply(fontFamily: 'Lato').merge(Typography().white); */
-
   static TextTheme get textTheme =>
       const TextTheme().apply(fontFamily: 'CairoPlay');
-
-  /*static TextTheme get textThemeEmoji =>
-      const TextTheme().apply(fontFamily: 'Noto Color Emoji');*/
-
-  /*static TextStyle get textFontEmoji =>
-      const TextStyle().apply(fontFamily: 'Noto Color Emoji');*/
-  //const TextStyle(fontFamily: 'Noto Color Emoji');
-
-  //static String get fontFamily => 'CairoPlay';
 
   static FloatingActionButtonThemeData get floatingActionButtonTheme =>
       const FloatingActionButtonThemeData(
@@ -29,11 +16,17 @@ class ThemeApp {
         foregroundColor: Color(0xFF263238),
       );
 
-  static DialogTheme get dialogTheme =>
-      const DialogTheme(shadowColor: Color(0xffffffff));
+  static DialogTheme get dialogTheme => const DialogTheme(
+    shadowColor: Color(0xffffffff),
+    //backgroundColor: Colors.black54,
+    //barrierColor: StyleApp.primaryContainerOpacity08,
+  );
 
-  static DialogThemeData get dialogThemeData =>
-      const DialogThemeData(shadowColor: Color(0xffffffff));
+  static DialogThemeData get dialogThemeData => const DialogThemeData(
+    shadowColor: Color(0xffffffff),
+    //backgroundColor: Colors.black54,
+    //barrierColor: StyleApp.primaryContainerOpacity08,
+  );
 
   static BottomNavigationBarThemeData get bottomNavigationBarTheme =>
       const BottomNavigationBarThemeData(

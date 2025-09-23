@@ -12,12 +12,16 @@ import '../../utils/fecha_util.dart';
 import '../../utils/file_util.dart';
 import '../../utils/horario_verano.dart';
 import '../../utils/shared_prefs.dart';
+import 'nav/app_nav_rail.dart';
+import 'widgets/open_dialog.dart';
+import 'widgets/select_date.dart';
 import 'widgets/grafico_precios.dart';
 import 'tabs/home_tab/home_tab.dart';
 import 'tabs/precios_tab.dart';
 import 'tabs/timelapse_tab.dart';
-import 'widgets/app_drawer.dart';
+import 'nav/app_drawer.dart';
 import 'widgets/main_body.dart';
+import 'widgets/popup_menu_helper.dart';
 
 class HomeScreen extends StatefulWidget {
   final DateTime? fecha;
@@ -117,13 +121,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     /// COMPRUEBA SI LA FECHA ESTÁ ALMACENADA
     if (isFirstLaunch == false && storage.fechaInBoxData(fechaSelect)) {
-      Response? response = await openDialog(
+      Response? response = await OpenDialog.alert(
+        context,
         Alert.archived,
         fechaDuple: fechaSelect,
       );
-      /*if (response == Response.cancel || response == null) {
-        return;
-      } else if (response == Response.go)*/
+      /*Response? response = await openDialog(
+        Alert.archived,
+        fechaDuple: fechaSelect,
+      );*/
       if (response == Response.cancel || response == null) {
         return;
       } else if (response == Response.go) {
@@ -353,23 +359,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// SELECTOR DE UNA FECHA
   Future<void> selectDate() async {
-    final DateTime hoy = DateTime.now().toLocal();
-    DateTime manana = DateTime(hoy.year, hoy.month, hoy.day + 1);
-    DateTime? picked = await showDatePicker(
-      context: context,
-      locale: const Locale('es', 'ES'),
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2021, 6),
-      lastDate: manana,
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-    );
+    DateTime? picked = await DatePicker.selectDate(context);
     if (picked != null) {
+      final DateTime hoy = DateTime.now().toLocal();
+      DateTime manana = DateTime(hoy.year, hoy.month, hoy.day + 1);
       //bool dataNotYet = picked.difference(hoy).inDays > 1;
       if (picked == manana && hoy.hour < 20) {
-        if (await openDialog(Alert.notyet) == Response.ok) {
+        if (mounted &&
+            await OpenDialog.alert(context, Alert.notyet) == Response.ok) {
+          httpBoxData(picked);
+        }
+        /*if (await openDialog(Alert.notyet) == Response.ok) {
           httpBoxData(picked);
           //httpBoxDatas(picked, picked);
-        }
+        }*/
       } else {
         httpBoxData(picked);
         //httpBoxDatas(picked, picked);
@@ -379,38 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// SELECTOR DE DOS FECHAS
   Future<void> selectDates() async {
-    final DateTime hoy = DateTime.now().toLocal();
-    DateTimeRange? newRange = await showDateRangePicker(
-      context: context,
-      locale: const Locale('es', 'ES'),
-      initialDateRange: DateTimeRange(
-        start: DateTime(hoy.year, hoy.month, hoy.day - 7),
-        end: DateTime.now(),
-      ),
-      firstDate: DateTime(2021, 6),
-      lastDate: DateTime.now(),
-      //initialEntryMode: DatePickerEntryMode.calendarOnly,
-      fieldStartLabelText: 'Desde',
-      fieldEndLabelText: 'Hasta',
-      fieldStartHintText: 'dd/mm/aaaa',
-      fieldEndHintText: 'dd/mm/aaaa',
-      cancelText: 'CANCELAR',
-      confirmText: 'ACEPTAR',
-      saveText: 'ACEPTAR',
-      errorFormatText: 'Formato no válido.',
-      errorInvalidText: 'Fuera de rango.',
-      errorInvalidRangeText: 'Período no válido.',
-      /*builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            appBarTheme: AppBarTheme(
-              backgroundColor: isDark ? AppColor.boxDark : AppColor.light,
-            ),
-          ),
-          child: child ?? const Text(''),
-        );
-      },*/
-    );
+    DateTimeRange? newRange = await DatePicker.selectRange(context);
     if (newRange != null) {
       //DateTime start = FechaUtil.dateToDateHms(newRange.start);
       //DateTime end = FechaUtil.dateToDateHms(newRange.end);
@@ -418,49 +390,6 @@ class _HomeScreenState extends State<HomeScreen> {
       //print(newRange); 2025-04-07 00:00:00.000 - 2025-04-12 00:00:00.000
       httpBoxDatas(newRange.start, newRange.end);
     }
-  }
-
-  Future<Response>? openDialog(Alert alert, {DateTime? fechaDuple}) async {
-    String title = 'Fecha en Archivo';
-    String fechaString = fechaDuple != null
-        ? DateFormat('d MMM yy').format(fechaDuple)
-        : 'ese día';
-    String content =
-        'Los datos de $fechaString ya han sido consultados y están archivados. '
-        'Puedes verlos en el histórico de consultas.\n'
-        'Continuar con la consulta sobreescribe los datos almacenados.';
-    if (alert == Alert.notyet) {
-      title = 'No publicado';
-      content =
-          'En torno a las 20:15h de cada día, la REE publica los precios '
-          'de la electricidad que se aplicarán al día siguiente, por lo que '
-          'es posible que los datos todavía no estén publicados.';
-    }
-    return await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: [
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () => Navigator.of(context).pop(Response.cancel),
-            ),
-            if (alert == Alert.archived)
-              TextButton(
-                onPressed: () => Navigator.pop(context, Response.go),
-                child: const Text('Ver'),
-              ),
-            TextButton(
-              child: const Text('Ok'),
-              onPressed: () => Navigator.of(context).pop(Response.ok),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -552,6 +481,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: Builder(
+          builder: (context) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: IconButton(
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                icon: Image.asset('assets/images/bulb.gif'),
+              ),
+            );
+          },
+        ),
+        //automaticallyImplyLeading: true,
         title: const Text(
           'Open Luz',
           style: TextStyle(color: StyleApp.accentColor),
@@ -569,16 +510,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 : null,
             icon: const Icon(Icons.skip_next),
           ),
-          IconButton(onPressed: selectDate, icon: const Icon(Icons.today)),
-          IconButton(
-            onPressed: selectDates,
-            icon: const Icon(Icons.date_range),
-          ),
-          PopupMenuButton(
-            icon: const Icon(Icons.more_vert),
-            onSelected: ((int item) {
-              switch (item) {
-                case 0:
+          PopupMenuHelper.buildPopupMenu(
+            context,
+            onSelected: (value) {
+              switch (value) {
+                case OptionsMenu.fecha:
+                  selectDate();
+                case OptionsMenu.intervalo:
+                  selectDates();
+                case OptionsMenu.delete:
                   showSnackBar(
                     'Los datos del día ${newBoxData!.fechaddMMyy} han sido eliminados',
                   );
@@ -590,26 +530,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   resetHomeScreen();
                   initApp();
                   loadBoxData();
-                case != 0:
-                  break;
+                case OptionsMenu.divider:
+                  null;
               }
-            }),
-            itemBuilder: (context) => const [
-              PopupMenuItem<int>(
-                value: 0,
-                child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 2),
-                  dense: true,
-                  leading: Icon(Icons.delete),
-                  title: Text('Eliminar'),
-                ),
-              ),
-            ],
+            },
+            optionsList: OptionsMenu.values,
           ),
         ],
       ),
-      drawer: const AppDrawer(),
 
+      drawer: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth >= 640 && constraints.maxHeight > 600) {
+            return const AppNavRail();
+          } else {
+            return const AppDrawer();
+          }
+        },
+      ),
+      //drawer: const AppDrawer(),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),

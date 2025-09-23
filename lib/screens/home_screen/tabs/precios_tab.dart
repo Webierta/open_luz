@@ -25,7 +25,6 @@ class PreciosTab extends StatelessWidget {
           ListView.separated(
             separatorBuilder: (context, index) => Divider(
               height: 0.2,
-              //color: StyleApp.backgroundColor.withOpacity(0.2),
               color: StyleApp.backgroundColor.withAlpha(20),
             ),
             physics: const NeverScrollableScrollPhysics(),
@@ -82,13 +81,30 @@ class PreciosTab extends StatelessWidget {
                 child: ListTile(
                   //minLeadingWidth: 80,
                   //contentPadding: EdgeInsets.only(left: 20),
+                  //contentPadding: EdgeInsets.all(0),
                   leading: tab == 1
                       //? Tarifa.getIconCara(precios, precios[index])
-                      ? Text(
+                      /*? Text(
                           Tarifa.getEmojiCara(precios, precios[index]),
                           style: StyleApp.textFontEmoji.copyWith(fontSize: 24),
                           //style: TextStyle(fontSize: 30),
+                        )*/
+                      ? Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Image.asset(
+                            Tarifa.getBombilla(precios, precios[index]),
+                            //width: 200,
+                            //height: 150,
+                          ),
                         )
+                      /*? CircleAvatar(
+                          backgroundImage: AssetImage(
+                            Tarifa.getBombilla(precios, precios[index]),
+                          ),
+                        )*/
                       : Text(
                           '${index + 1}',
                           style: const TextStyle(

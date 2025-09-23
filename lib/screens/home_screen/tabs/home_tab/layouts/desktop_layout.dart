@@ -8,6 +8,7 @@ import '../widgets_evolution_chart/home_tab_evolution.dart';
 import '../widgets_head/home_tab_head.dart';
 import '../widgets_head/rango_precios.dart';
 import '../widgets_horas/home_tab_horas.dart';
+import 'layout.dart';
 
 class DesktopLayout extends StatelessWidget {
   final BoxConstraints parentConstraints;
@@ -42,13 +43,20 @@ class DesktopLayout extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(flex: 10, child: HomeTabReloj(boxData: boxData)),
+                      Expanded(
+                        flex: 10,
+                        child: HomeTabReloj(
+                          boxData: boxData,
+                          layout: Layout.DesktopLayout,
+                        ),
+                      ),
                       Spacer(flex: 1),
                       Expanded(
                         flex: 10,
                         child: HomeTabHoras(
                           boxData: boxData,
-                          isMobileLayout: false,
+                          //isMobileLayout: false,
+                          layout: Layout.DesktopLayout,
                         ),
                       ),
                     ],
@@ -56,7 +64,6 @@ class DesktopLayout extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 HomeTabEvolution(boxData: boxData),
-
                 const SizedBox(height: 20),
                 HomeTabGeneracion(boxData: boxData),
                 const SizedBox(height: 20),

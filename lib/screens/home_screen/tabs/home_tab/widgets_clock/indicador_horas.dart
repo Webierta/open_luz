@@ -1,5 +1,3 @@
-import 'package:animated_emoji/animated_emoji.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geekyants_flutter_gauges/geekyants_flutter_gauges.dart';
@@ -12,7 +10,6 @@ import '../../../../../utils/estados.dart';
 class IndicadorHoras extends StatefulWidget {
   final BoxData boxData;
   const IndicadorHoras({super.key, required this.boxData});
-
   @override
   State<IndicadorHoras> createState() => _IndicadorHorasState();
 }
@@ -22,10 +19,7 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
   int hora = 0;
   double precio = 0;
   List<int> horas = List<int>.generate(24, (i) => i);
-  String emojiCara = '';
-  //AnimatedEmoji emoji = AnimatedEmoji(AnimatedEmojis.smile, size: 520);
-  AnimatedEmojiData emojiAnimatedCara = AnimatedEmojis.smile;
-
+  String bombillaAsset = 'assets/images/yellow.png';
   //final now = DateTime.now().toLocal();
   FixedExtentScrollController controller = FixedExtentScrollController();
 
@@ -73,8 +67,7 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
       setState(() {
         hora = newHora;
         precio = precios.elementAt(hora);
-        emojiCara = Tarifa.getEmojiCara(precios, precio);
-        emojiAnimatedCara = Tarifa.getEmojiCaraAnimated(precios, precio);
+        bombillaAsset = Tarifa.getBombilla(precios, precio);
       });
     });
   }
@@ -121,20 +114,20 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
     horasCorte.sort();
 
     List<RadialValueBar> valueBar = [];
-    valueBar.add(
+    /*valueBar.add(
       RadialValueBar(
         value: 24,
         color: Colors.black12,
         valueBarThickness: 150,
         radialOffset: 60,
       ),
-    );
+    );*/
     valueBar.add(
       RadialValueBar(
         value: 24,
-        color: Colors.black26,
-        valueBarThickness: 100, //50,
-        radialOffset: 90, //60,
+        color: Colors.black38,
+        valueBarThickness: 350, //50,
+        radialOffset: 150, //60,
       ),
     );
     valueBar.add(
@@ -184,14 +177,21 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
                     looping: true,
                     children: [
                       for (var i = 0; i < horas.length; i++)
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.unfold_more_double,
-                              color: Colors.white38,
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: FittedBox(
+                            //alignment: Alignment.topLeft,
+                            child: Row(
+                              //mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.unfold_more_double,
+                                  color: Colors.white38,
+                                ),
+                                Text('$i h'),
+                              ],
                             ),
-                            Text('$i h'),
-                          ],
+                          ),
                         ),
                     ],
                     onSelectedItemChanged: (index) {
@@ -200,19 +200,26 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
                   ),
                 ),
                 const Spacer(flex: 2),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      precio.toStringAsFixed(4),
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    Text(
-                      '€/kWh',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          precio.toStringAsFixed(4),
+                          style: TextStyle(fontSize: 22),
+                        ),
+                      ),
+                      FittedBox(
+                        child: Text(
+                          '€/kWh',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -266,22 +273,9 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
                     ],
                     valueBar: getPeriodoHoras(),
                   ),
-                  /*FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      //Tarifa.getEmojiCara(precios, precio),
-                      emojiCara,
-                      style: TextStyle(fontSize: 42),
-                    ),
-                  ),*/
-                  //FittedBox(fit: BoxFit.fitWidth, child: emoji),
-                  //emoji,
                   AspectRatio(
-                    aspectRatio: 0.33,
-                    child: AnimatedEmoji(
-                      emojiAnimatedCara,
-                      //size: 1080,
-                    ), // 128
+                    aspectRatio: 0.5,
+                    child: Image.asset(bombillaAsset),
                   ),
                 ],
               ),
@@ -299,10 +293,12 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
                         color: const Color(0xFF81C784),
                         border: Border.all(color: Colors.blueGrey),
                       ),
-                      child: Text(
-                        'VALLE',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black),
+                      child: FittedBox(
+                        child: Text(
+                          'VALLE',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
                   ),
@@ -317,10 +313,12 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
                         ),
                       ),
                       // Colors.yellow[50]
-                      child: Text(
-                        'LLANO',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black),
+                      child: FittedBox(
+                        child: Text(
+                          'LLANO',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
                   ),
@@ -331,11 +329,12 @@ class _IndicadorHorasState extends State<IndicadorHoras> {
                         color: const Color(0xFFe57373),
                         border: Border.all(color: Colors.blueGrey),
                       ),
-                      // Colors.red[100],
-                      child: Text(
-                        'PUNTA',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black),
+                      child: FittedBox(
+                        child: Text(
+                          'PUNTA',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
                   ),

@@ -26,7 +26,7 @@ OTRAS HERRAMIENTAS
 
 - Comparador de los precios de distintas fechas (accesible desde el Archivo).
 
-- Comparador de tarifas entre una factura (introducida en formato csv) y los precios PVPC.
+- Comparador entre PVPC y una factura del mercado libre (introducida en formato csv).
 
 - Consulta online la etiqueta energética de un aparato eléctrico para conocer su eficiencia energética.
 

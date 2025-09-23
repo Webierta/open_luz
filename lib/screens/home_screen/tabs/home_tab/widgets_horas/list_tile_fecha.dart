@@ -20,11 +20,15 @@ class ListTileFecha extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Column(
+        //mainAxisSize: MainAxisSize.min,
         children: [
           Tarifa.getIconPeriodo(periodo),
-          Text(
-            periodo.name.toUpperCase(),
-            style: const TextStyle(fontSize: 10, color: Colors.white),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              periodo.name.toUpperCase(),
+              style: const TextStyle(fontSize: 10, color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -42,9 +46,15 @@ class ListTileFecha extends StatelessWidget {
           ),
         ),
       ),
-      subtitle: Text(
-        '$precio €/kWh',
-        style: const TextStyle(color: Colors.white),
+      subtitle: Align(
+        alignment: Alignment.topLeft,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            '$precio €/kWh',
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
       ),
       trailing: Column(
         children: [
@@ -52,9 +62,11 @@ class ListTileFecha extends StatelessWidget {
             desviacion > 0 ? Icons.upload : Icons.download,
             color: desviacion > 0 ? Colors.red : Colors.green,
           ),
-          Text(
-            '${desviacion.toStringAsFixed(4)} €',
-            style: const TextStyle(fontSize: 12, color: Colors.white),
+          FittedBox(
+            child: Text(
+              '${desviacion.toStringAsFixed(4)} €',
+              style: const TextStyle(fontSize: 12, color: Colors.white),
+            ),
           ),
         ],
       ),

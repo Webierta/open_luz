@@ -52,6 +52,12 @@ class StyleApp {
     ),
   );
 
+  static const BoxDecoration kIconDeco = BoxDecoration(
+    color: Colors.black87,
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+    //BorderRadius.circular(10),
+  );
+
   static const ShapeBorderClipper kBorderClipper = ShapeBorderClipper(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(10)),

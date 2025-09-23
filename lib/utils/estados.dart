@@ -9,7 +9,6 @@ enum Status {
   noPublicado,
   noAcceso,
   tiempoExcedido,
-  errorToken,
   accessDenied,
   noInternet,
 }

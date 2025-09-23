@@ -1,12 +1,11 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/estados.dart';
 
-enum RangoHoras {
-  /*baratas('😄', '8 horas más baratas'),
+/*enum RangoHoras {
+  */ /*baratas('😄', '8 horas más baratas'),
   intermedias('😐', '8 horas intermedias'),
-  caras('😡', '8 horas más caras');*/
+  caras('😡', '8 horas más caras');*/ /*
 
   baratas('\u{1F604}', '8 horas más baratas'),
   intermedias('\u{1F610}', '8 horas intermedias'),
@@ -15,16 +14,16 @@ enum RangoHoras {
   final String emoji;
   final String description;
   const RangoHoras(this.emoji, this.description);
-}
+}*/
 
-enum RangoHorasAnimated {
-  baratas(AnimatedEmojis.grin, '8 horas más baratas'),
-  intermedias(AnimatedEmojis.neutralFace, '8 horas intermedias'),
-  caras(AnimatedEmojis.rage, '8 horas más caras');
+enum RangoHorasBombilla {
+  baratas('assets/images/green.png', '8 horas más baratas'),
+  intermedias('assets/images/yellow.png', '8 horas intermedias'),
+  caras('assets/images/red.png', '8 horas más caras');
 
-  final AnimatedEmojiData emoji;
+  final String bombilla;
   final String description;
-  const RangoHorasAnimated(this.emoji, this.description);
+  const RangoHorasBombilla(this.bombilla, this.description);
 }
 
 class Tarifa {
@@ -38,16 +37,6 @@ class Tarifa {
       return const Color(0xFFFFCDD2);
     }
   }
-
-  /*static String getSemaforo(double precio) {
-    if (precio < 0.10) {
-      return 'semaforo_verde.png';
-    } else if (precio < 0.15) {
-      return 'semaforo_amarillo.png';
-    } else {
-      return 'semaforo_rojo.png';
-    }
-  }*/
 
   static Color getColorBorder(double precio) {
     if (precio < 0.10) {
@@ -71,7 +60,7 @@ class Tarifa {
     }
   }
 
-  static RangoHoras getRangoHora(List<double> preciosHoras, double valor) {
+  /*static RangoHoras getRangoHora(List<double> preciosHoras, double valor) {
     List<double> preciosAs = List.from(preciosHoras);
     preciosAs.sort();
     if (preciosAs.indexWhere((v) => v == valor) < 8) {
@@ -81,9 +70,9 @@ class Tarifa {
     } else {
       return RangoHoras.intermedias;
     }
-  }
+  }*/
 
-  static String getEmojiCara(List<double> preciosHoras, double valor) {
+  /*static String getEmojiCara(List<double> preciosHoras, double valor) {
     List<double> preciosAs = List.from(preciosHoras);
     preciosAs.sort();
     if (preciosAs.indexWhere((v) => v == valor) < 8) {
@@ -93,58 +82,34 @@ class Tarifa {
     } else {
       return RangoHoras.intermedias.emoji;
     }
-  }
+  }*/
 
-  static AnimatedEmojiData getEmojiCaraAnimated(
+  static RangoHorasBombilla getRangoHora(
     List<double> preciosHoras,
     double valor,
   ) {
     List<double> preciosAs = List.from(preciosHoras);
     preciosAs.sort();
     if (preciosAs.indexWhere((v) => v == valor) < 8) {
-      return RangoHorasAnimated.baratas.emoji;
+      return RangoHorasBombilla.baratas;
     } else if (preciosAs.indexWhere((v) => v == valor) > 15) {
-      return RangoHorasAnimated.caras.emoji;
+      return RangoHorasBombilla.caras;
     } else {
-      return RangoHorasAnimated.intermedias.emoji;
+      return RangoHorasBombilla.intermedias;
     }
   }
 
-  /*static Widget getIconCara(List<double> preciosHoras, double valor,
-      {double sizeIcon = 40.0, double radius = 20}) {
+  static String getBombilla(List<double> preciosHoras, double valor) {
     List<double> preciosAs = List.from(preciosHoras);
     preciosAs.sort();
     if (preciosAs.indexWhere((v) => v == valor) < 8) {
-      return CircleAvatar(
-        radius: radius,
-        backgroundColor: Colors.green[700],
-        child: Icon(
-          Icons.sentiment_very_satisfied_sharp, //stars, // grade, //flash_on,
-          size: sizeIcon,
-          color: Colors.white,
-        ),
-      );
+      return RangoHorasBombilla.baratas.bombilla;
     } else if (preciosAs.indexWhere((v) => v == valor) > 15) {
-      return CircleAvatar(
-        radius: radius,
-        backgroundColor: Colors.deepOrange[700],
-        child: Icon(
-          Icons.sentiment_very_dissatisfied, //warning,
-          size: sizeIcon,
-          color: Colors.white,
-        ),
-      );
+      return RangoHorasBombilla.caras.bombilla;
     } else {
-      return CircleAvatar(
-        radius: radius,
-        foregroundColor: Colors.amber[700],
-        child: Icon(
-          Icons.sentiment_neutral_sharp,
-          size: sizeIcon,
-        ),
-      );
+      return RangoHorasBombilla.intermedias.bombilla;
     }
-  }*/
+  }
 
   static Color getPeriodoColor(DateTime fecha) {
     if (fecha.weekday > 5) {
@@ -224,15 +189,4 @@ class Tarifa {
     }
     return Icon(icono, size: size, color: color);
   }
-
-  /*static String getEmojiPeriodo(Periodo periodo) {
-    // ☀️ ⛅ ⚡ ❄️
-    if (periodo == Periodo.valle) {
-      return '☀️';
-    } else if (periodo == Periodo.punta) {
-      return '❄️';
-    } else {
-      return '⛅';
-    }
-  }*/
 }

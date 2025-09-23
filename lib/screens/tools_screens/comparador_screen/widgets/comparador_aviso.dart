@@ -1,23 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-const String urlGitHub = 'https://github.com/Webierta/tarifa_luz/issues';
+import '../../../../utils/constantes.dart';
+import '../../../../utils/launch_url.dart';
 
 class ComparadorAviso extends StatelessWidget {
   const ComparadorAviso({super.key});
-
-  Future<void> launchURL(BuildContext context, String url) async {
-    if (!await launchUrl(
-      Uri.parse(url),
-      mode: LaunchMode.externalApplication,
-    )) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Could not launch $url')));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,30 +18,30 @@ class ComparadorAviso extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
-        Text(
+        const Text(
           'El comparador de tarias todavía es una FUNCIÓN '
           'EXPERIMENTAL en fase de desarrollo.',
         ),
         const SizedBox(height: 10),
-        Text(
+        const Text(
           'Esta nueva herramienta compara una simulación de facturas de la '
           'tarifa PVPC y del mercado libre calculadas en base a un periodo '
           'concreto de consumos.',
         ),
         const SizedBox(height: 10),
-        Text(
+        const Text(
           'Las facturas estimadas no incluyen impuestos ni otros conceptos '
           'como el bono social o el alquiler del contador.',
         ),
         const SizedBox(height: 10),
-        Text(
+        const Text(
           'Para utilizarla debes adjuntar un fichero con extensión csv '
           'con los datos horarios de tu consumo. Puedes '
           'descargarlo en la página web de tu distribuidora '
           '(no confundir con tu comercializadora).',
         ),
         const SizedBox(height: 10),
-        Text(
+        const Text(
           'Puedes conocer tu distribuidora en el apartado '
           'DATOS DEL CONTRATO de tu factura. En su web selecciona '
           'Consumo registrado o Consumo por factura '
@@ -77,9 +65,9 @@ class ComparadorAviso extends StatelessWidget {
                 ),
                 text: 'listado completo de Distribuidoras de Electricidad.',
                 recognizer: TapGestureRecognizer()
-                  ..onTap = () => launchURL(
+                  ..onTap = () => LaunchUrl.init(
                     context,
-                    'https://sede.cnmc.gob.es/listado/censo/1',
+                    url: 'https://sede.cnmc.gob.es/listado/censo/1',
                   ),
               ),
             ],
@@ -108,7 +96,7 @@ class ComparadorAviso extends StatelessWidget {
                 ),
                 text: 'informar vía Github',
                 recognizer: TapGestureRecognizer()
-                  ..onTap = () => launchURL(context, urlGitHub),
+                  ..onTap = () => LaunchUrl.init(context, url: kGitHubIssues),
               ),
               const TextSpan(
                 text:
@@ -120,7 +108,7 @@ class ComparadorAviso extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        Text(
+        const Text(
           'Además, hay distribuidoras que no proporcionan un fichero CSV, '
           'sino un fichero en formato Excel (XLS). En ese caso, se puede convertir '
           'el fichero XLS en un fichero CSV (por ejemplo con el programa '
@@ -129,7 +117,7 @@ class ComparadorAviso extends StatelessWidget {
           'garantía de que el resultado sea satisfactorio.',
         ),
         const SizedBox(height: 10),
-        Text(
+        const Text(
           'La aplicación no almacena ningún dato del archivo de consumos. '
           'Opcionalmente, desde Ajustes puedes elegir que los precios '
           'descargados para calcular la factura PVPC se incorporen a la App '

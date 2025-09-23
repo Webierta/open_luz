@@ -1,4 +1,8 @@
-FUENTE DE LOS DATOS Y PERMISOS
+Esta app se comparte libremente bajo las condiciones de la GNU General Public License v.3 con la esperanza de que sea útil, pero SIN NINGUNA GARANTÍA. Este programa es software libre: usted puede redistribuirlo y / o modificarlo bajo los términos de la Licencia Pública General GNU publicada por la Fundación para el Software Libre, versión 3 (GPLv3). La Licencia Pública General de GNU no permite incorporar este programa en programas propietarios.
+
+Si te gusta esta aplicación, por favor considera hacer una donación. Gracias.
+
+FUENTES DE LOS DATOS
 
 Esta App utiliza información extraída directamente de la web de Red Eléctrica de España (REE) y otros cálculos de elaboración propia a partir de esos datos.
 
@@ -14,14 +18,6 @@ No puede garantizarse que el contenido ofrecido esté libre de errores, ya sean 
 
 Aplicación gratuita y sin publicidad. No se utiliza ningún dato del usuario. Software de código abierto (código fuente en Github), libre de spyware, malware, virus o cualquier proceso que atente contra tu dispositivo o viole tu privacidad. Esta aplicación no extrae ni almacena ninguna información ni requiere ningún permiso extraño, y renuncia a la publicidad y a cualquier mecanismo de seguimiento. El acceso, navegación y uso de los servicios en el sitio web de REE puede implicar la aceptación de su Política de Cookies.
 
-AUTOR Y LICENCIA
-
-Copyleft 2020-2025 - Jesús Cuerda (Webierta) - All Wrongs Reserved. Licencia GPLv3.
-
-Esta app se comparte libremente bajo las condiciones de la GNU General Public License v.3 con la esperanza de que sea útil, pero SIN NINGUNA GARANTÍA. Este programa es software libre: usted puede redistribuirlo y / o modificarlo bajo los términos de la Licencia Pública General GNU publicada por la Fundación para el Software Libre, versión 3 (GPLv3). La Licencia Pública General de GNU no permite incorporar este programa en programas propietarios.
-
-Si te gusta esta aplicación, por favor considera hacer una donación. Gracias.
-
 CRÉDITOS
 
 Imágenes:
@@ -29,17 +25,6 @@ Imágenes:
 * Proyecto Label 2020, financiado por el Programa Horizon 2020 de la Unión Europea.
 * Colourful Education icon set (Free for commercial use) de Zeeshan Ahmed (https://www.iconfinder.com/zeeicons).
 * New Year Resolutions! icon set (Creative Commons Attribution 3.0 Unported) de Laura Reen (http://laurareen.com/).
-* Traffic lights set by macrovector (https://www.freepik.com/author/macrovector) on Freepik (Free license).
 
 Fuente:
 * Cairo Play Font. Designed by Mohamed Gaber, Accademia di Belle Arti di Urbino. These fonts are licensed under the Open Font License.
-
-Dependencias. Flutter packages:
-* fl_chart by flutter4fun.com (MIT License).
-* hive by isar.dev (Apache License Version 2.0).
-* xml by lukas-renggli.ch (MIT License).
-* printing by nfet.net (Apache License 2.0).
-* flutter_svg by dnfield.dev (MIT License).
-* geekyants_flutter_gauges by geekyants.com (MIT License).
-* envied by cinibulk.dev (MIT License).
-* shared_preferences (BSD-3-Clause License).

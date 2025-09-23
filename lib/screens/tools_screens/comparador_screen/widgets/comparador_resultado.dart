@@ -69,7 +69,7 @@ class _ComparadorResultadoState extends State<ComparadorResultado> {
                 ),
               ),
               const SizedBox(height: 4),
-              Text('COMPARATIVA DE FACTURAS ESTIMADAS'),
+              const Text('COMPARATIVA DE FACTURAS ESTIMADAS'),
               Text('Periodo del $fecha1 al $fecha2'),
               const Spacer(),
               Text(

@@ -12,12 +12,16 @@ class RangoPrecios extends StatelessWidget {
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(
-          'Rango de precios',
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall!.copyWith(color: Colors.white),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'Rango de precios',
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall!.copyWith(color: Colors.white),
+          ),
         ),
+        //Text('mín., medio y max.'),
         Expanded(child: IndicadorPrecios(boxData: boxData)),
       ],
     );

@@ -14,19 +14,24 @@ class HomeTabEvolution extends StatelessWidget {
       children: [
         const Padding(
           padding: EdgeInsets.only(left: 6),
-          child: Row(
-            children: [
-              Text(
-                '📈 Evolución diaria del precio',
-                style: TextStyle(
-                  color: StyleApp.onBackgroundColor,
-                  fontSize: 16,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                softWrap: true,
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: FittedBox(
+              child: Row(
+                children: [
+                  Text(
+                    '📈 Evolución diaria del precio',
+                    style: TextStyle(
+                      color: StyleApp.onBackgroundColor,
+                      fontSize: 16,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
         EvolutionChart(boxData: boxData),

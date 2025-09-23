@@ -21,23 +21,53 @@ class AboutScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 const HeadScreen(),
-                const Icon(Icons.code, size: 60),
-                Text(
-                  'Versión $kVersion', // VERSION
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Text(
-                  'Copyleft 2020-2025\nJesús Cuerda (Webierta)',
-                  style: Theme.of(context).textTheme.titleMedium,
-                  textAlign: TextAlign.center,
-                ),
-                const FittedBox(
-                  child: Text('All Wrongs Reserved. Licencia GPLv3'),
-                ),
-                //Divider(color: Theme.of(context).colorScheme.onBackground),
                 Divider(color: Theme.of(context).colorScheme.onSurface),
                 const SizedBox(height: 10.0),
                 const ReadFile(archivo: 'assets/files/about.txt'),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (context) => Container(
+                          decoration: StyleApp.kBoxDeco,
+                          child: Theme(
+                            data: ThemeData(
+                              brightness: Brightness.dark,
+                              scaffoldBackgroundColor: Colors.blueGrey[600],
+                              appBarTheme: AppBarThemeData(
+                                backgroundColor: Colors.blueGrey[600],
+                              ),
+                              cardColor: Colors.blueGrey[600],
+                              dividerTheme: DividerThemeData(
+                                color: Colors.white,
+                              ),
+                              textTheme: TextTheme(
+                                headlineSmall: TextStyle(
+                                  fontWeight: FontWeight.w100,
+                                  color: StyleApp.accentColor,
+                                  fontSize: 40,
+                                ),
+                              ),
+                            ),
+                            child: Container(
+                              decoration: StyleApp.kBoxDeco,
+                              child: LicensePage(
+                                applicationIcon: Image.asset(
+                                  'assets/images/ic_launcher.png',
+                                ),
+                                applicationName: 'Open Luz',
+                                applicationVersion: kVersion,
+                                applicationLegalese:
+                                    'Copyleft 2020-2025\nJesús Cuerda (Webierta).\nAll Wrongs Reserved.\nLicencia GPLv3.',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Ver Licencias'),
+                ),
               ],
             ),
           ),

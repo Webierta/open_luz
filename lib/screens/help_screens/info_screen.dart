@@ -18,10 +18,7 @@ class InfoScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                Image.asset('assets/images/ic_launcher.png'),
                 const HeadScreen(),
-                //const Icon(Icons.info_outline, size: 60),
-                //Divider(color: Theme.of(context).colorScheme.onBackground),
                 Divider(color: Theme.of(context).colorScheme.onSurface),
                 const SizedBox(height: 10.0),
                 const ReadFile(archivo: 'assets/files/info.txt'),

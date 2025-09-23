@@ -1,25 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme/style_app.dart';
+import '../../utils/launch_url.dart';
 
 class BonoSocial extends StatelessWidget {
   const BonoSocial({super.key});
-
-  Future<void> launchURL({
-    required BuildContext context,
-    required String url,
-  }) async {
-    if (!await launchUrl(
-      Uri.parse(url),
-      mode: LaunchMode.externalApplication,
-    )) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Could not launch $url')));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +86,8 @@ class BonoSocial extends StatelessWidget {
                             const SizedBox(height: 20),
                             TextButton.icon(
                               onPressed: () {
-                                launchURL(
-                                  context: context,
+                                LaunchUrl.init(
+                                  context,
                                   url:
                                       'https://www.cnmc.es/bono-social#dirigir-solicitud',
                                 );
@@ -115,8 +100,8 @@ class BonoSocial extends StatelessWidget {
                             const SizedBox(height: 20),
                             TextButton.icon(
                               onPressed: () {
-                                launchURL(
-                                  context: context,
+                                LaunchUrl.init(
+                                  context,
                                   url:
                                       'https://www.cnmc.es/bono-social#que-documentacion',
                                 );
@@ -145,8 +130,8 @@ class BonoSocial extends StatelessWidget {
                             const SizedBox(height: 20),
                             TextButton(
                               onPressed: () {
-                                launchURL(
-                                  context: context,
+                                LaunchUrl.init(
+                                  context,
                                   url: 'https://www.bonosocial.gob.es/',
                                 );
                               },
@@ -157,8 +142,8 @@ class BonoSocial extends StatelessWidget {
                             const SizedBox(height: 10),
                             TextButton(
                               onPressed: () {
-                                launchURL(
-                                  context: context,
+                                LaunchUrl.init(
+                                  context,
                                   url: 'https://civio.es/bono-social/',
                                 );
                               },
@@ -167,8 +152,8 @@ class BonoSocial extends StatelessWidget {
                             const SizedBox(height: 10),
                             TextButton(
                               onPressed: () {
-                                launchURL(
-                                  context: context,
+                                LaunchUrl.init(
+                                  context,
                                   url: 'https://www.cnmc.es/bono-social',
                                 );
                               },
@@ -179,8 +164,8 @@ class BonoSocial extends StatelessWidget {
                             const SizedBox(height: 10),
                             TextButton(
                               onPressed: () {
-                                launchURL(
-                                  context: context,
+                                LaunchUrl.init(
+                                  context,
                                   url:
                                       'https://www.boe.es/eli/es/rd/2017/10/06/897/con',
                                 );
