@@ -4,6 +4,8 @@
 
 Información detallada sobre la tarifa de la energía eléctrica en el mercado regulado (PVPC) en España para una gestión eficiente del consumo de electricidad.
 
+<img src="https://github.com/Webierta/open_luz/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot1.png" width="200" alt="screenshot">
+
 ## APP
 
 Esta App ofrece información general y detallada sobre el precio de la electricidad y las horas más baratas y más caras a lo largo de un día para facilitar el ajuste de los hábitos de consumo buscando el ahorro en la factura de la luz.
