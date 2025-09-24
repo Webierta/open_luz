@@ -39,29 +39,6 @@ class TabletLayout extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                /*SizedBox(
-                  height: 500,
-                  child: IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 4, //10,
-                          child: HomeTabReloj(boxData: boxData),
-                        ),
-                        Spacer(flex: 1),
-                        Expanded(
-                          flex: 10,
-                          child: HomeTabHoras(
-                            boxData: boxData,
-                            isMobileLayout: false,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),*/
                 IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,25 +61,6 @@ class TabletLayout extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                /*SizedBox(
-                  width: double.maxFinite,
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    spacing: 5.0,
-                    runSpacing: 10.0,
-                    children: [
-                      SizedBox(
-                        width: constraints.maxWidth / 2.1,
-                        child: HomeTabReloj(boxData: boxData),
-                      ),
-                      SizedBox(
-                        width: constraints.maxWidth / 2.1,
-                        child: HomeTabHoras(boxData: boxData),
-                      ),
-                    ],
-                  ),
-                ),*/
                 const SizedBox(height: 20),
                 HomeTabEvolution(boxData: boxData),
                 const SizedBox(height: 20),

@@ -66,6 +66,6 @@ class StyleApp {
 
   static const Color accentColor = Color(0xFFFFDE03);
 
-  static TextStyle get textFontEmoji =>
-      const TextStyle().apply(fontFamily: 'Noto Color Emoji');
+  // static TextStyle get textFontEmoji =>
+  //     const TextStyle().apply(fontFamily: 'Noto Color Emoji');
 }

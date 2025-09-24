@@ -49,11 +49,6 @@ class HomeTabHoras extends StatelessWidget {
         ] else ...[
           AspectRatio(
             aspectRatio: layout == Layout.DesktopLayout ? 1.3 : 0.9,
-            // aspectRatio: switch (layout) {
-            //   Layout.DesktopLayout => 1.3,
-            //   Layout.TabletLayout => 0.9,
-            //   Layout.MobileLayout => 1,
-            // },
             child: ClipHoras(boxData: boxData),
           ),
         ],

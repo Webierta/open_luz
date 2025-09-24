@@ -1,7 +1,7 @@
 name: open_luz
 description: "Detailed information on electricity prices in Spain (PVPC) for efficient electricity consumption management."
 publish_to: 'none'
-version: 0.1.0
+version: 1.0.0+1
 
 environment:
   sdk: ^3.9.2
@@ -77,6 +77,3 @@ flutter:
           weight: 800
         - asset: assets/google_fonts/CairoPlay-Black.ttf
           weight: 900
-    - family: Noto Color Emoji
-      fonts:
-        - asset: assets/google_fonts/NotoColorEmoji-Regular.ttf

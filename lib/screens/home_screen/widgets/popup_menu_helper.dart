@@ -14,6 +14,16 @@ enum OptionsMenu {
 }
 
 class PopupMenuHelper {
+  /*static buildActions(
+    BuildContext context, {
+    required PopupMenuCallback onSelected,
+    required List<OptionsMenu> optionsList,
+  }) {
+    return List.generate(optionsList.length, (index){
+      return IconButton(onPressed: optionsList[index]., icon: Icon(optionsList[index].icon));
+    });
+  }*/
+
   static PopupMenuButton<OptionsMenu> buildPopupMenu(
     BuildContext context, {
     required PopupMenuCallback onSelected,

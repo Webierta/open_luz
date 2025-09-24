@@ -25,17 +25,15 @@ class DonateScreen extends StatelessWidget {
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const HeadScreen(),
                 Divider(color: Theme.of(context).colorScheme.onSurface),
                 const SizedBox(height: 10.0),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Esta App es Software libre y de Código Abierto. Por favor considera colaborar '
-                    'para mantener activo el desarrollo de esta App.',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+                Text(
+                  'Esta App es Software libre y de Código Abierto. Por favor considera colaborar '
+                  'para mantener activo el desarrollo de esta App.',
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 20.0),
                 Text.rich(
@@ -61,26 +59,32 @@ class DonateScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Puedes colaborar con el desarrollo de ésta y otras aplicaciones con una pequeña '
-                    'aportación a mi monedero de Bitcoins o vía PayPal.',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+                Text(
+                  'Puedes colaborar con el desarrollo de ésta y otras aplicaciones con una pequeña '
+                  'aportación a mi monedero de Bitcoins o vía PayPal.',
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text(
-                      'Scan this QR code with your wallet application:',
-                      style: Theme.of(context).textTheme.bodyLarge,
+                const SizedBox(height: 20.0),
+                Text(
+                  'Scan this QR code with your wallet application:',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+
+                /*FractionallySizedBox(
+                  widthFactor: 0.4,
+                  child: AspectRatio(
+                    aspectRatio: 1.5,
+                    child: Image.asset(
+                      'assets/images/Bitcoin_QR.png',
+                      width: 100,
                     ),
                   ),
-                ),
-                FractionallySizedBox(
-                  widthFactor: 0.4,
+                ),*/
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.5,
+                    maxHeight: MediaQuery.of(context).size.height * 0.4,
+                  ),
                   child: Image.asset('assets/images/Bitcoin_QR.png'),
                 ),
                 Align(
@@ -174,17 +178,15 @@ class DonateScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                FractionallySizedBox(
-                  widthFactor: 0.3,
-                  child: ElevatedButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      elevation: 10.0,
-                      padding: const EdgeInsets.all(10),
-                    ),
-                    onPressed: () => LaunchUrl.init(context, url: urlPayPal),
-                    child: Image.asset('assets/images/paypal_logo.png'),
+                ElevatedButton(
+                  onPressed: () => LaunchUrl.init(context, url: urlPayPal),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    elevation: 10.0,
+                    padding: const EdgeInsets.all(10),
+                    fixedSize: Size(200, 50),
                   ),
+                  child: Image.asset('assets/images/paypal_logo.png'),
                 ),
               ],
             ),

@@ -42,13 +42,6 @@ class HomeTabReloj extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        /*Align(
-          alignment: Alignment.centerLeft,
-          child: AspectRatio(
-            aspectRatio: 5 / 4, // 5 / 4,
-            child: IndicadorHoras(boxData: boxData),
-          ),
-        ),*/
         AspectRatio(
           aspectRatio: switch (layout) {
             Layout.DesktopLayout => 1.3,

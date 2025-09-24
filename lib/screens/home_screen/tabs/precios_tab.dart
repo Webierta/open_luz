@@ -83,12 +83,6 @@ class PreciosTab extends StatelessWidget {
                   //contentPadding: EdgeInsets.only(left: 20),
                   //contentPadding: EdgeInsets.all(0),
                   leading: tab == 1
-                      //? Tarifa.getIconCara(precios, precios[index])
-                      /*? Text(
-                          Tarifa.getEmojiCara(precios, precios[index]),
-                          style: StyleApp.textFontEmoji.copyWith(fontSize: 24),
-                          //style: TextStyle(fontSize: 30),
-                        )*/
                       ? Container(
                           decoration: BoxDecoration(
                             color: Colors.black87,

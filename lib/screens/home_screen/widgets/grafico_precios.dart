@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../../../database/box_data.dart';
 import '../../../models/tarifa.dart';
+import '../../../theme/style_app.dart';
 import '../../../utils/estados.dart';
+import 'main_body.dart';
 
 class GraficoPrecios extends StatefulWidget {
-  final BoxData boxData;
+  final BoxData? boxData;
   const GraficoPrecios({required this.boxData, super.key});
   @override
   State<GraficoPrecios> createState() => _GraficoPreciosState();
@@ -20,7 +22,7 @@ class _GraficoPreciosState extends State<GraficoPrecios>
 
   @override
   void initState() {
-    precios = List.from(widget.boxData.preciosHora);
+    precios = List.from(widget.boxData?.preciosHora ?? []);
     super.initState();
   }
 
@@ -30,14 +32,14 @@ class _GraficoPreciosState extends State<GraficoPrecios>
 
   double getMaxY() {
     return double.parse(
-      (widget.boxData.precioMax + (widget.boxData.precioMax / 5))
+      (widget.boxData!.precioMax + (widget.boxData!.precioMax / 5))
           .toStringAsFixed(2),
     );
   }
 
   List<HorizontalLine> getExtraLinesY() {
     List<HorizontalLine> horizontalLines = [];
-    for (double i = 0; i < widget.boxData.precioMax + 0.05; i += 0.05) {
+    for (double i = 0; i < widget.boxData!.precioMax + 0.05; i += 0.05) {
       horizontalLines.add(
         HorizontalLine(
           y: i,
@@ -52,8 +54,21 @@ class _GraficoPreciosState extends State<GraficoPrecios>
 
   @override
   Widget build(BuildContext context) {
+    if (precios.isEmpty || widget.boxData == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text('Sin datos')),
+        body: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            decoration: StyleApp.mainDecoration,
+            child: MainBodyEmpty(),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
-      appBar: AppBar(title: Text('PVPC ${widget.boxData.fechaddMMyy}')),
+      appBar: AppBar(title: Text('PVPC ${widget.boxData!.fechaddMMyy}')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 30, 10, 10),
@@ -136,7 +151,7 @@ class _GraficoPreciosState extends State<GraficoPrecios>
               extraLinesData: ExtraLinesData(
                 horizontalLines: [
                   HorizontalLine(
-                    y: widget.boxData.precioMedio,
+                    y: widget.boxData!.precioMedio,
                     strokeWidth: 1,
                     dashArray: [4, 4],
                     color: Colors.blue[100],
@@ -145,7 +160,7 @@ class _GraficoPreciosState extends State<GraficoPrecios>
                       padding: const EdgeInsets.only(left: 10, bottom: 4),
                       alignment: Alignment.topLeft,
                       labelResolver: (_) =>
-                          'Media: ${cuatroDec(widget.boxData.precioMedio)}',
+                          'Media: ${cuatroDec(widget.boxData!.precioMedio)}',
                     ),
                   ),
                   ...getExtraLinesY(),
@@ -168,7 +183,7 @@ class _GraficoPreciosState extends State<GraficoPrecios>
                   //tooltipBgColor: Colors.black54,
                   getTooltipColor: ((touchedSpot) => Colors.black54),
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    DateTime fechaHour = widget.boxData.fecha.copyWith(
+                    DateTime fechaHour = widget.boxData!.fecha.copyWith(
                       hour: groupIndex,
                     );
                     Periodo periodo = Tarifa.getPeriodo(fechaHour);
@@ -200,7 +215,7 @@ class _GraficoPreciosState extends State<GraficoPrecios>
                 },
               ),
               barGroups: precios.asMap().entries.map((precio) {
-                DateTime fechaHour = widget.boxData.fecha.copyWith(
+                DateTime fechaHour = widget.boxData!.fecha.copyWith(
                   hour: precio.key,
                 );
                 Periodo periodo = Tarifa.getPeriodo(fechaHour);

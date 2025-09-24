@@ -12,14 +12,14 @@ import '../../utils/fecha_util.dart';
 import '../../utils/file_util.dart';
 import '../../utils/horario_verano.dart';
 import '../../utils/shared_prefs.dart';
-import 'nav/app_nav_rail.dart';
+import '../nav/app_drawer.dart';
+import '../nav/app_nav_rail.dart';
 import 'widgets/open_dialog.dart';
 import 'widgets/select_date.dart';
 import 'widgets/grafico_precios.dart';
 import 'tabs/home_tab/home_tab.dart';
 import 'tabs/precios_tab.dart';
 import 'tabs/timelapse_tab.dart';
-import 'nav/app_drawer.dart';
 import 'widgets/main_body.dart';
 import 'widgets/popup_menu_helper.dart';
 
@@ -60,14 +60,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void loadSharedPrefs() async => await sharedPrefs.init();
 
-  void resetHomeScreen() {
+  /*void resetHomeScreen() {
     setState(() {
       isFirstLaunch = false;
       loadSharedPrefs();
       currentTab = 0;
     });
     loadBoxData();
-  }
+  }*/
 
   /// INICIO APLICACION : CARGA DATOS ALMACENADOS O CONSULTA NUEVOS DATOS
   void initApp() async {
@@ -126,10 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
         Alert.archived,
         fechaDuple: fechaSelect,
       );
-      /*Response? response = await openDialog(
-        Alert.archived,
-        fechaDuple: fechaSelect,
-      );*/
       if (response == Response.cancel || response == null) {
         return;
       } else if (response == Response.go) {
@@ -434,11 +430,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     }
+
     Widget? floatingActionButton() {
-      if (currentTab == 0) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
+      if (currentTab == 3) {
+        return null;
+      }
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (currentTab == 0)
             FloatingActionButton.small(
               heroTag: null,
               onPressed: () {
@@ -447,36 +447,45 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: const Icon(Icons.update, size: 28),
             ),
+          if (currentTab == 0 && listBoxData.isNotEmpty && newBoxData != null)
             const SizedBox(height: 8),
+          if ((currentTab == 0 || currentTab == 1 || currentTab == 2) &&
+              listBoxData.isNotEmpty &&
+              newBoxData != null)
             FloatingActionButton.small(
               heroTag: null,
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => GraficoPrecios(boxData: newBoxData!),
+                    builder: (context) => GraficoPrecios(boxData: newBoxData),
                   ),
                 );
               },
               child: const Icon(Icons.bar_chart, size: 28),
             ),
-          ],
-        );
-      }
-      if (currentTab == 1 || currentTab == 2) {
-        return FloatingActionButton.small(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => GraficoPrecios(boxData: newBoxData!),
-              ),
-            );
-          },
-          child: const Icon(Icons.bar_chart, size: 28),
-        );
-      }
-      return null;
+        ],
+      );
+    }
+
+    void deleteFecha() {
+      showSnackBar(
+        'Los datos del día ${newBoxData!.fechaddMMyy} han sido eliminados',
+      );
+      setState(() {
+        listBoxData.remove(newBoxData);
+        listBoxData = storage.listBoxDataSort;
+        storage.deleteBoxData(newBoxData!);
+      });
+      //resetHomeScreen();  ??
+      //await initApp();    ??
+      //loadBoxData();      ??
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(isFirstLaunch: false),
+        ),
+      );
     }
 
     return Scaffold(
@@ -498,47 +507,72 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(color: StyleApp.accentColor),
         ),
         actions: [
-          IconButton(
-            onPressed: (listBoxData.length > 1 && !isFirstFecha)
-                ? nextBoxData
-                : null,
-            icon: const Icon(Icons.skip_previous),
+          Container(
+            decoration: BoxDecoration(
+              color: StyleApp.backgroundColor,
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            child: OverflowBar(
+              children: [
+                IconButton(
+                  onPressed: (listBoxData.length > 1 && !isFirstFecha)
+                      ? nextBoxData
+                      : null,
+                  icon: const Icon(Icons.skip_previous),
+                ),
+                IconButton(
+                  onPressed: (listBoxData.length > 1 && !isLastFecha)
+                      ? prevBoxData
+                      : null,
+                  icon: const Icon(Icons.skip_next),
+                ),
+              ],
+            ),
           ),
-          IconButton(
-            onPressed: (listBoxData.length > 1 && !isLastFecha)
-                ? prevBoxData
-                : null,
-            icon: const Icon(Icons.skip_next),
-          ),
-          PopupMenuHelper.buildPopupMenu(
-            context,
-            onSelected: (value) {
-              switch (value) {
-                case OptionsMenu.fecha:
-                  selectDate();
-                case OptionsMenu.intervalo:
-                  selectDates();
-                case OptionsMenu.delete:
-                  showSnackBar(
-                    'Los datos del día ${newBoxData!.fechaddMMyy} han sido eliminados',
-                  );
-                  setState(() {
-                    listBoxData.remove(newBoxData);
-                    listBoxData = storage.listBoxDataSort;
-                    storage.deleteBoxData(newBoxData!);
-                  });
-                  resetHomeScreen();
-                  initApp();
-                  loadBoxData();
-                case OptionsMenu.divider:
-                  null;
-              }
-            },
-            optionsList: OptionsMenu.values,
-          ),
+          if (MediaQuery.of(context).size.width > 500) ...[
+            const SizedBox(width: 20),
+            Container(
+              decoration: BoxDecoration(
+                color: StyleApp.backgroundColor,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              child: OverflowBar(
+                children: [
+                  IconButton(
+                    onPressed: selectDate,
+                    icon: Icon(OptionsMenu.fecha.icon),
+                  ),
+                  IconButton(
+                    onPressed: selectDates,
+                    icon: Icon(OptionsMenu.intervalo.icon),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            IconButton(
+              onPressed: deleteFecha,
+              icon: Icon(OptionsMenu.delete.icon),
+            ),
+          ] else
+            PopupMenuHelper.buildPopupMenu(
+              context,
+              onSelected: (value) {
+                switch (value) {
+                  case OptionsMenu.fecha:
+                    selectDate();
+                  case OptionsMenu.intervalo:
+                    selectDates();
+                  case OptionsMenu.delete:
+                    deleteFecha();
+                  case OptionsMenu.divider:
+                    null;
+                }
+              },
+              optionsList: OptionsMenu.values,
+            ),
         ],
       ),
-
       drawer: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           if (constraints.maxWidth >= 640 && constraints.maxHeight > 600) {
@@ -548,7 +582,6 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
       ),
-      //drawer: const AppDrawer(),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),

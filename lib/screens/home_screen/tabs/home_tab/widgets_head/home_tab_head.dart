@@ -74,8 +74,8 @@ class HomeTabHead extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 10),
-        const Spacer(),
+        const SizedBox(height: 30),
+        //const Spacer(),
         ListTile(
           contentPadding: EdgeInsets.zero,
           leading: Container(
@@ -131,7 +131,7 @@ class HomeTabHead extends StatelessWidget {
             ),
           ),
         ),
-        const Spacer(),
+        //const Spacer(),
       ],
     );
   }

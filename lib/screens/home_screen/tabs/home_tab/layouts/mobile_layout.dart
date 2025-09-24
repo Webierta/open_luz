@@ -28,71 +28,15 @@ class MobileLayout extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 24),
             child: Column(
-              //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /*IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(flex: 3, child: HomeTabHead(boxData: boxData)),
-                      if (constraints.maxWidth > 450) ...[
-                        const SizedBox(width: 20),
-                        Expanded(
-                          flex: 1,
-                          child: RangoPrecios(boxData: boxData),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),*/
-                //const SizedBox(height: 20),
-                /*if (constraints.maxWidth < 450) ...[
-                  SizedBox(
-                    height: 250,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: RangoPrecios(boxData: boxData),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],*/
                 IntrinsicHeight(
                   child: Row(
-                    //crossAxisAlignment: CrossAxisAlignment.start,
-                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(flex: 4, child: HomeTabHead(boxData: boxData)),
                       RangoPrecios(boxData: boxData),
                     ],
                   ),
                 ),
-                /*SizedBox(
-                  width: double.maxFinite,
-                  child: Wrap(
-                    //direction: Axis.horizontal,
-                    alignment: WrapAlignment.spaceBetween,
-                    //runAlignment: WrapAlignment.end,
-                    //crossAxisAlignment: WrapCrossAlignment.end,
-                    spacing: 10.0,
-                    runSpacing: 20.0,
-                    children: [
-                      SizedBox(
-                        width: 300,
-                        height: 350,
-                        child: HomeTabHead(boxData: boxData),
-                      ),
-                      SizedBox(
-                        width: 100,
-                        height: 350,
-                        child: RangoPrecios(boxData: boxData),
-                      ),
-                    ],
-                  ),
-                ),*/
                 const SizedBox(height: 20),
                 HomeTabReloj(boxData: boxData, layout: Layout.MobileLayout),
                 const SizedBox(height: 20),
