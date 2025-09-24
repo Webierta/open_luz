@@ -575,7 +575,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       drawer: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          if (constraints.maxWidth >= 640 && constraints.maxHeight > 600) {
+          if (constraints.maxWidth >= 600 && constraints.maxHeight > 600) {
             return const AppNavRail();
           } else {
             return const AppDrawer();
