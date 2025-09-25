@@ -2,6 +2,10 @@
 
 Este archivo registra y documenta los cambios más notables a lo largo del desarrollo del proyecto.
 
+## [2.0.0] - 2025-09-25
+
+- Versión candidata definitiva
+
 ## [1.0.0] - 2025-09-24
 
 - First beta release.
@@ -9,4 +13,5 @@ Este archivo registra y documenta los cambios más notables a lo largo del desar
 
 
 [1.0.0]: https://github.com/Webierta/open_luz/releases/tag/v1.0.0
+[2.0.0]: https://github.com/Webierta/open_luz/releases/tag/v2.0.0
 

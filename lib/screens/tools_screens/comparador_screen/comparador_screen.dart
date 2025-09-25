@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-
 import 'package:path/path.dart' as path;
 
 import '../../../database/box_data.dart';
@@ -18,7 +17,7 @@ import '../../../utils/horario_verano.dart';
 import '../../../utils/shared_prefs.dart';
 import '../../home_screen/home_screen.dart';
 import 'widgets/comparador_aviso.dart';
-import 'widgets/comparador_resultado.dart';
+import 'widgets/resultado.dart';
 
 typedef LineaCsv = ({String fecha, int hora, double consumo});
 
@@ -123,9 +122,7 @@ class _ComparadorState extends State<Comparador> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
+                            onPressed: () => Navigator.pop(context),
                             icon: Icon(Icons.close),
                           ),
                           Expanded(
@@ -805,39 +802,20 @@ class _ComparadorState extends State<Comparador> {
             double.tryParse(controllerPotenciaLibreVallePrecio.text)! *
             dias);
 
-    show(
-      fechas: listaDates,
-      facturaConsumosPVPC: facturaConsumosPVPC,
-      facturaPotenciaPVPC: facturaPotenciaPVPC,
-      facturaConsumosLibre: facturaConsumosLibre,
-      facturaPotenciaLibre: facturaPotenciaLibre,
-    );
-  }
-
-  void show({
-    required List<DateTime> fechas,
-    required double facturaConsumosPVPC,
-    required double facturaPotenciaPVPC,
-    required double facturaConsumosLibre,
-    required double facturaPotenciaLibre,
-  }) {
-    /*String fecha1 = DateFormat('dd/MM/yyyy').format(
-        DateTime(fechas.first.year, fechas.first.month, fechas.first.day));
-    String fecha2 = DateFormat('dd/MM/yyyy')
-        .format(DateTime(fechas.last.year, fechas.last.month, fechas.last.day));*/
-    showModalBottomSheet(
-      context: context,
-      //backgroundColor: Colors.black,
-      builder: (BuildContext context) {
-        return ComparadorResultado(
-          fechas: fechas,
-          facturaConsumosPVPC: facturaConsumosPVPC,
-          facturaPotenciaPVPC: facturaPotenciaPVPC,
-          facturaConsumosLibre: facturaConsumosLibre,
-          facturaPotenciaLibre: facturaPotenciaLibre,
-        );
-      },
-    );
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Resultado(
+            fechas: listaDates,
+            facturaConsumosPVPC: facturaConsumosPVPC,
+            facturaPotenciaPVPC: facturaPotenciaPVPC,
+            facturaConsumosLibre: facturaConsumosLibre,
+            facturaPotenciaLibre: facturaPotenciaLibre,
+          ),
+        ),
+      );
+    }
   }
 
   /*({String fecha1, String fecha2}) getRangoFormat(List<String> fechas) {
