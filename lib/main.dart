@@ -1,6 +1,9 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'database/box_data.dart';
 import 'screens/home_screen/home_screen.dart';
@@ -9,6 +12,29 @@ import 'utils/constantes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isLinux) {
+    await windowManager.ensureInitialized();
+    WindowOptions windowOptions = WindowOptions(
+      //alwaysOnTop: true,
+      //fullScreen: true,
+      size: Size(800, 1000),
+      minimumSize: Size(600, 800),
+      title: 'Open Luz',
+      backgroundColor: Colors.transparent,
+      center: true,
+      skipTaskbar: false,
+      windowButtonVisibility: true,
+      titleBarStyle: TitleBarStyle.normal,
+    );
+
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+      await windowManager.setAlwaysOnTop(false);
+    });
+  }
+
   await Hive.initFlutter();
   Hive.registerAdapter(BoxDataAdapter());
   await Hive.openBox<BoxData>(boxStore);
