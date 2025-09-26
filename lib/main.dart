@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -27,6 +28,12 @@ void main() async {
       windowButtonVisibility: true,
       titleBarStyle: TitleBarStyle.normal,
     );
+    // now use bitsdojo_window to limit min windows size
+    //const initialSize = Size(minWindowWidth, minWindowHeight);
+    const minSize = Size(600, 800);
+    final win = appWindow;
+    win.minSize = minSize;
+    win.size = minSize;
 
     windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
