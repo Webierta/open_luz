@@ -5,6 +5,7 @@ version: 2.0.4+6
 
 environment:
   sdk: ^3.9.2
+  flutter: '>=3.35.4'
 
 dependencies:
   archive: ^4.0.7
