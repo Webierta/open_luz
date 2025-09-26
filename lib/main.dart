@@ -15,7 +15,7 @@ void main() async {
 
   if (Platform.isLinux) {
     await windowManager.ensureInitialized();
-    WindowOptions windowOptions = WindowOptions(
+    WindowOptions windowOptions = const WindowOptions(
       //alwaysOnTop: true,
       //fullScreen: true,
       size: Size(800, 1000),
@@ -31,7 +31,7 @@ void main() async {
     windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
       await windowManager.focus();
-      await windowManager.setAlwaysOnTop(false);
+      //await windowManager.setAlwaysOnTop(false);
     });
   }
 

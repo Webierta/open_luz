@@ -2,6 +2,13 @@
 
 Este archivo registra y documenta los cambios más notables a lo largo del desarrollo del proyecto.
 
+## [2.0.3] - 2026-09-25
+
+### Fixed
+
+- Fixed build apk from debug to release.
+- Sign the app.
+
 ## [2.0.2] - 2026-09-25
 
 ### Added
@@ -33,6 +40,7 @@ Este archivo registra y documenta los cambios más notables a lo largo del desar
 - First beta release.
 - Continuación y revisión del Proyecto del mismo autor [Tarifa Luz](https://github.com/Webierta/tarifa_luz).
 
+[2.0.3]: https://github.com/Webierta/open_luz/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/Webierta/open_luz/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/Webierta/open_luz/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/Webierta/open_luz/compare/v1.0.0...v2.0.0

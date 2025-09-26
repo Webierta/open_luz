@@ -1,6 +1,8 @@
 # OPEN LUZ
 
-[![GitHub Tag](https://img.shields.io/github/v/tag/Webierta/open_luz)](https://github.com/Webierta/open_luz/releases/)
+[![GitHub release](https://img.shields.io/github/release/Webierta/open_luz?include_prereleases=&sort=semver&color=blue)](https://github.com/Webierta/open_luz/releases/)
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue)](https://github.com/Webierta/open_luz/blob/main/LICENSE)
+[![issues - open_luz](https://img.shields.io/github/issues/Webierta/open_luz)](https://github.com/Webierta/open_luz/issues)
 
 *Detailed information on electricity prices in Spain (PVPC) for efficient electricity consumption management.*
 
