@@ -1,8 +1,15 @@
 # OPEN LUZ
 
+[![GitHub Tag](https://img.shields.io/github/v/tag/Webierta/open_luz)](https://github.com/Webierta/open_luz/releases/)
+
 *Detailed information on electricity prices in Spain (PVPC) for efficient electricity consumption management.*
 
 Información detallada sobre la tarifa de la energía eléctrica en el mercado regulado (PVPC) en España para una gestión eficiente del consumo de electricidad.
+
+## Para Android y Linux (deb)
+
+![Static Badge](https://img.shields.io/badge/platform-android-orange?logo=android)
+![Static Badge](https://img.shields.io/badge/platform-debian-orange?logo=debian)
 
 <img src="https://github.com/Webierta/open_luz/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot1.png" width="200" alt="screenshot">
 
@@ -22,7 +29,7 @@ Los precios horarios son los mismos para todo el territorio español independien
 
 ## FUNCIONES PRINCIPALES
 
-- **Actualiza últimos precios**. Sincroniza vía internet los últimos precios disponibles en el mercado regulado. Permite consultar los precios de la energía eléctrica de cualquier fecha (a partir del nuevo sistema tarifario.
+- **Actualiza últimos precios**. Sincroniza vía internet los últimos precios disponibles en el mercado regulado. Permite consultar los precios de la energía eléctrica de cualquier fecha (a partir del nuevo sistema tarifario).
 
 - **Descarga datos en bloque**. También permite consultar los precios en bloque de un rango de fechas. En este caso no se consultan los datos relativos a la generación eléctrica (renovabables / no renovables).
 
