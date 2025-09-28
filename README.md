@@ -8,12 +8,53 @@
 
 Información detallada sobre la tarifa de la energía eléctrica en el mercado regulado (PVPC) en España para una gestión eficiente del consumo de electricidad.
 
+<img src="https://github.com/Webierta/open_luz/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot1.png" width="200" alt="screenshot">
+
 ## Para Android y Linux (deb)
 
 ![Static Badge](https://img.shields.io/badge/platform-android-orange?logo=android)
 ![Static Badge](https://img.shields.io/badge/platform-debian-orange?logo=debian)
 
-<img src="https://github.com/Webierta/open_luz/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot1.png" width="200" alt="screenshot">
+### En Android
+
+Instala y mantén siempre actualizada la aplicación con **Obtainium**:
+
+<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22com.github.webierta.open_luz.open_luz%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FWebierta%2Fopen_luz%22%2C%22author%22%3A%22Webierta%22%2C%22name%22%3A%22Open%20Luz%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22includePrereleases%5C%22%3Afalse%2C%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22filterReleaseTitlesByRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22filterReleaseNotesByRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22verifyLatestTag%5C%22%3Afalse%2C%5C%22sortMethodChoice%5C%22%3A%5C%22date%5C%22%2C%5C%22useLatestAssetDateAsReleaseDate%5C%22%3Afalse%2C%5C%22releaseTitleAsVersion%5C%22%3Afalse%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22%5C%22%2C%5C%22appAuthor%5C%22%3A%5C%22%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22allowInsecure%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22%5C%22%2C%5C%22refreshBeforeDownload%5C%22%3Afalse%2C%5C%22github-creds%5C%22%3A%5C%22%5C%22%2C%5C%22GHReqPrefix%5C%22%3A%5C%22%5C%22%7D%22%2C%22overrideSource%22%3A%22GitHub%22%7D"><img src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" width="200" alt="Get it on Obtainium"></a>
+
+
+O descarga el archivo APk para tu dispositivo desde la [última versión publicada](https://github.com/Webierta/open_luz/releases).
+
+### En Linux (deb)
+
+Descarga el [archivo open_luz_deb.deb](https://github.com/Webierta/open_luz/releases/latest/download/open_luz_deb.deb) desde la [última versión publicada](https://github.com/Webierta/open_luz/releases). 
+
+La aplicación se instala en **/usr/local/bin/OpenLuz/**
+
+Desde una terminal se ejecuta con:
+
+`/usr/local/bin/OpenLuz/open_luz`
+
+Para crear un lanzador, en /home/tu_usuario/.local/share/applications/ crea el archivo **open-luz.desktop** con este contenido:
+
+~~~
+[Desktop Entry]
+Name=Open Luz
+GenericName=Open Luz PVPC
+Exec=/usr/local/bin/OpenLuz/open_luz
+Terminal=false
+Type=Application
+Icon=(ruta local a una imagen; aquí debajo se proporcionan algunos ejemplos que puedes descargar)
+Categories=Office;Internet;
+Comment=Tarifa regulada de energía eléctrica en España (PVPC)
+~~~
+
+Algunos iconos:
+
+<img src="https://github.com/Webierta/open_luz/blob/main/fastlane/metadata/android/en-US/images/icon.png?raw=true" width="100" alt="icono 1">
+
+<img src="https://github.com/Webierta/open_luz/blob/main/assets/icon/ic_foreground.png?raw=true" width="100" alt="icono 2">
+
+<img src="https://github.com/Webierta/open_luz/blob/main/assets/icon/pvpc_ios.png?raw=true" width="100" alt="icono 3">
 
 ## APP
 
