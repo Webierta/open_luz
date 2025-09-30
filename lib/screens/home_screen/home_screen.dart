@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemChannels;
 import 'package:intl/intl.dart';
 
 import '../../database/box_data.dart';
@@ -14,6 +15,7 @@ import '../../utils/horario_verano.dart';
 import '../../utils/shared_prefs.dart';
 import '../nav/app_drawer.dart';
 import '../nav/app_nav_rail.dart';
+import '../nav/snack_bar_helper.dart';
 import 'widgets/open_dialog.dart';
 import 'widgets/select_date.dart';
 import 'widgets/grafico_precios.dart';
@@ -210,7 +212,13 @@ class _HomeScreenState extends State<HomeScreen> {
       fechaRequest2,
     );
     if (download.statusCode != 200) {
-      showSnackBar('Error en la descarga de los precios PVPC.');
+      //showSnackBar('Error en la descarga de los precios PVPC.');
+      if (mounted) {
+        SnackBarHelper.show(
+          context,
+          'Error en la descarga de los precios PVPC.',
+        );
+      }
       setState(() => httpStatus = HttpStatus.stopped);
       return;
     }
@@ -220,13 +228,24 @@ class _HomeScreenState extends State<HomeScreen> {
       final String fileName = '$fechaRequest1-$fechaRequest2.zip';
       var extractZipOk = await FileUtil.extractZipPVPC(fileName);
       if (extractZipOk == false) {
-        showSnackBar('Error en la extracción de datos de los precios PVPC.');
+        //showSnackBar('Error en la extracción de datos de los precios PVPC.');
+        if (!mounted) return;
+        SnackBarHelper.show(
+          context,
+          'Error en la extracción de datos de los precios PVPC.',
+        );
         return;
       }
     }
     var archivos = await FileUtil.getFilesPVPC();
     if (archivos.isEmpty) {
-      showSnackBar('Error en la recuperación de los archivos de precios PVPC.');
+      //showSnackBar('Error en la recuperación de los archivos de precios PVPC.');
+      if (mounted) {
+        SnackBarHelper.show(
+          context,
+          'Error en la recuperación de los archivos de precios PVPC.',
+        );
+      }
       setState(() => httpStatus = HttpStatus.stopped);
       return;
     }
@@ -255,7 +274,9 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     } catch (e) {
-      showSnackBar('Error en la consulta de los precios PVPC.');
+      //showSnackBar('Error en la consulta de los precios PVPC.');
+      if (!mounted) return;
+      SnackBarHelper.show(context, 'Error en la consulta de los precios PVPC.');
       return;
     } finally {
       await FileUtil.deleteDir();
@@ -271,7 +292,11 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<DateTime, List<double>> mapDatePrecios = {};
     mapFechaPrecios.forEach((k, v) {
       if (v.length != 24) {
-        showSnackBar('Error en la lectura del archivo de precios PVPC.');
+        //showSnackBar('Error en la lectura del archivo de precios PVPC.');
+        SnackBarHelper.show(
+          context,
+          'Error en la lectura del archivo de precios PVPC.',
+        );
         return;
       }
       var date = DateFormat('dd-MM-yyyy').parse(k);
@@ -292,12 +317,12 @@ class _HomeScreenState extends State<HomeScreen> {
     loadBoxData();
   }
 
-  void showSnackBar(String msg) {
+  /*void showSnackBar(String msg) {
     //ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     final snackbar = SnackBar(content: Text(msg));
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
-  }
+  }*/
 
   bool get isLastFecha {
     setState(() => listBoxData = storage.listBoxDataSort);
@@ -468,69 +493,84 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    void deleteFecha() {
-      showSnackBar(
-        'Los datos del día ${newBoxData!.fechaddMMyy} han sido eliminados',
-      );
-      setState(() {
-        listBoxData.remove(newBoxData);
-        listBoxData = storage.listBoxDataSort;
-        storage.deleteBoxData(newBoxData!);
-      });
-      //resetHomeScreen();  ??
-      //await initApp();    ??
-      //loadBoxData();      ??
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(isFirstLaunch: false),
-        ),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: IconButton(
-                onPressed: () => Scaffold.of(context).openDrawer(),
-                icon: Image.asset('assets/images/bulb.gif'),
+    void deleteFecha() async {
+      if (listBoxData.isEmpty) {
+        //showSnackBar('Archivo sin datos. Nada que eliminar');
+        SnackBarHelper.show(context, 'Archivo sin datos. Nada que eliminar');
+      } else {
+        bool? confirm = await OpenDialog.confirm(
+          context,
+          icon: Icons.delete_forever,
+          titulo: 'Eliminar',
+          contenido: '¿Quieres eliminar el actual registro?',
+        );
+        if (confirm == true) {
+          //showSnackBar('Los datos del día ${newBoxData!.fechaddMMyy} han sido eliminados',);
+          if (context.mounted) {
+            SnackBarHelper.show(
+              context,
+              'Los datos del día ${newBoxData!.fechaddMMyy} han sido eliminados',
+            );
+          }
+          setState(() {
+            listBoxData.remove(newBoxData);
+            listBoxData = storage.listBoxDataSort;
+            storage.deleteBoxData(newBoxData!);
+          });
+          if (context.mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(isFirstLaunch: false),
               ),
             );
-          },
-        ),
-        //automaticallyImplyLeading: true,
-        title: const Text(
-          'Open Luz',
-          style: TextStyle(color: StyleApp.accentColor),
-        ),
-        actions: [
-          Container(
-            decoration: BoxDecoration(
-              color: StyleApp.backgroundColor,
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-            child: OverflowBar(
-              children: [
-                IconButton(
-                  onPressed: (listBoxData.length > 1 && !isFirstFecha)
-                      ? nextBoxData
-                      : null,
-                  icon: const Icon(Icons.skip_previous),
-                ),
-                IconButton(
-                  onPressed: (listBoxData.length > 1 && !isLastFecha)
-                      ? prevBoxData
-                      : null,
-                  icon: const Icon(Icons.skip_next),
-                ),
-              ],
-            ),
+          }
+        }
+      }
+    }
+
+    Future<void> exitApp() async {
+      bool? confirm = await OpenDialog.confirm(
+        context,
+        icon: Icons.exit_to_app,
+        titulo: 'Salir',
+        contenido: '¿Quieres salir y cerrar la aplicación?',
+      );
+      if (confirm == true) {
+        /*Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(isFirstLaunch: false),
           ),
-          if (MediaQuery.of(context).size.width > 500) ...[
-            const SizedBox(width: 20),
+          (Route<dynamic> route) => false, // Elimina todas las rutas anteriores
+        );*/
+        await SystemChannels.platform.invokeMethod<void>(
+          'SystemNavigator.pop',
+          true,
+        );
+      }
+    }
+
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: Builder(
+            builder: (context) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: IconButton(
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  icon: Image.asset('assets/images/bulb.gif'),
+                ),
+              );
+            },
+          ),
+          //automaticallyImplyLeading: true,
+          title: const Text(
+            'Open Luz',
+            style: TextStyle(color: StyleApp.accentColor),
+          ),
+          actions: [
             Container(
               decoration: BoxDecoration(
                 color: StyleApp.backgroundColor,
@@ -539,98 +579,128 @@ class _HomeScreenState extends State<HomeScreen> {
               child: OverflowBar(
                 children: [
                   IconButton(
-                    onPressed: selectDate,
-                    icon: Icon(OptionsMenu.fecha.icon),
+                    onPressed: (listBoxData.length > 1 && !isFirstFecha)
+                        ? nextBoxData
+                        : null,
+                    icon: const Icon(Icons.skip_previous),
                   ),
                   IconButton(
-                    onPressed: selectDates,
-                    icon: Icon(OptionsMenu.intervalo.icon),
+                    onPressed: (listBoxData.length > 1 && !isLastFecha)
+                        ? prevBoxData
+                        : null,
+                    icon: const Icon(Icons.skip_next),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 10),
-            IconButton(
-              onPressed: deleteFecha,
-              icon: Icon(OptionsMenu.delete.icon),
-            ),
-          ] else
-            PopupMenuHelper.buildPopupMenu(
-              context,
-              onSelected: (value) {
-                switch (value) {
-                  case OptionsMenu.fecha:
-                    selectDate();
-                  case OptionsMenu.intervalo:
-                    selectDates();
-                  case OptionsMenu.delete:
-                    deleteFecha();
-                  case OptionsMenu.divider:
-                    null;
-                }
-              },
-              optionsList: OptionsMenu.values,
-            ),
-        ],
-      ),
-      drawer: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (constraints.maxWidth >= 600 && constraints.maxHeight > 600) {
-            return const AppNavRail();
-          } else {
-            return const AppDrawer();
-          }
-        },
-      ),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          decoration: StyleApp.mainDecoration,
-          child: mainBody,
+            if (MediaQuery.of(context).size.width > 500) ...[
+              const SizedBox(width: 20),
+              Container(
+                decoration: BoxDecoration(
+                  color: StyleApp.backgroundColor,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: OverflowBar(
+                  children: [
+                    IconButton(
+                      onPressed: selectDate,
+                      icon: Icon(OptionsMenu.fecha.icon),
+                    ),
+                    IconButton(
+                      onPressed: selectDates,
+                      icon: Icon(OptionsMenu.intervalo.icon),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 20),
+              IconButton(
+                onPressed: deleteFecha,
+                icon: Icon(OptionsMenu.delete.icon),
+              ),
+              const SizedBox(width: 10),
+              IconButton(onPressed: exitApp, icon: Icon(OptionsMenu.exit.icon)),
+            ] else
+              PopupMenuHelper.buildPopupMenu(
+                context,
+                onSelected: (value) {
+                  switch (value) {
+                    case OptionsMenu.fecha:
+                      selectDate();
+                    case OptionsMenu.intervalo:
+                      selectDates();
+                    case OptionsMenu.delete:
+                      deleteFecha();
+                    case OptionsMenu.exit:
+                      exitApp();
+                    case OptionsMenu.divider1:
+                    case OptionsMenu.divider2:
+                      null;
+                  }
+                },
+                optionsList: OptionsMenu.values,
+              ),
+          ],
         ),
+        drawer: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth >= 600 && constraints.maxHeight > 600) {
+              return const AppNavRail();
+            } else {
+              return const AppDrawer();
+            }
+          },
+        ),
+        body: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            decoration: StyleApp.mainDecoration,
+            child: mainBody,
+          ),
+        ),
+        floatingActionButton: floatingActionButton(),
+        bottomNavigationBar:
+            // storage.listBoxData.isNotEmpty
+            (listBoxData.isNotEmpty && httpStatus == HttpStatus.completed)
+            ? BottomNavigationBar(
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.lightbulb_outline),
+                    activeIcon: Icon(Icons.upgrade),
+                    label: 'PVPC',
+                    //backgroundColor: Colors.amber,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.euro_symbol),
+                    activeIcon: Icon(Icons.upgrade),
+                    label: 'PRECIO',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.access_time),
+                    activeIcon: Icon(Icons.upgrade),
+                    label: 'HORAS',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.timelapse),
+                    activeIcon: Icon(Icons.upgrade),
+                    label: 'FRANJAS',
+                  ),
+                ],
+                currentIndex: currentTab,
+                onTap: (int index) {
+                  /*scrollController.animateTo(
+                        scrollController.position.minScrollExtent,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.fastOutSlowIn,
+                      );*/
+                  scrollPositionMin();
+                  if (currentTab != index) {
+                    setState(() => currentTab = index);
+                  }
+                },
+              )
+            : null,
       ),
-      floatingActionButton: floatingActionButton(),
-      bottomNavigationBar:
-          // storage.listBoxData.isNotEmpty
-          (listBoxData.isNotEmpty && httpStatus == HttpStatus.completed)
-          ? BottomNavigationBar(
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.lightbulb_outline),
-                  activeIcon: Icon(Icons.upgrade),
-                  label: 'PVPC',
-                  //backgroundColor: Colors.amber,
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.euro_symbol),
-                  activeIcon: Icon(Icons.upgrade),
-                  label: 'PRECIO',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.access_time),
-                  activeIcon: Icon(Icons.upgrade),
-                  label: 'HORAS',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.timelapse),
-                  activeIcon: Icon(Icons.upgrade),
-                  label: 'FRANJAS',
-                ),
-              ],
-              currentIndex: currentTab,
-              onTap: (int index) {
-                /*scrollController.animateTo(
-                      scrollController.position.minScrollExtent,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.fastOutSlowIn,
-                    );*/
-                scrollPositionMin();
-                if (currentTab != index) {
-                  setState(() => currentTab = index);
-                }
-              },
-            )
-          : null,
     );
   }
 }

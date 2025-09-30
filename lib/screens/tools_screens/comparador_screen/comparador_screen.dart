@@ -15,7 +15,8 @@ import '../../../utils/estados.dart';
 import '../../../utils/file_util.dart';
 import '../../../utils/horario_verano.dart';
 import '../../../utils/shared_prefs.dart';
-import '../../home_screen/home_screen.dart';
+import '../../nav/pop_scope_helper.dart';
+import '../../nav/snack_bar_helper.dart';
 import 'widgets/comparador_aviso.dart';
 import 'widgets/resultado.dart';
 
@@ -87,8 +88,9 @@ class _ComparadorState extends State<Comparador> {
     if (resultCsv.isSelect == false) return;
     if (resultCsv.isSelect && resultCsv.fileCsv == null) {
       if (!mounted) return;
-      const snackBar = SnackBar(content: Text('Archivo no válido.'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      //const snackBar = SnackBar(content: Text('Archivo no válido.'));
+      //ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      SnackBarHelper.show(context, 'Archivo no válido.');
     } else {
       controllerFile.text = path.basename(resultCsv.fileCsv!.path);
       setState(() => fileConsumos = resultCsv.fileCsv);
@@ -99,15 +101,7 @@ class _ComparadorState extends State<Comparador> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (bool didPop, Object? result) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(isFirstLaunch: false),
-          ),
-        );
-      },
+      onPopInvokedWithResult: PopScopeHelper.onPopInvoked(context),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Comparador'),
@@ -429,9 +423,17 @@ class _ComparadorState extends State<Comparador> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: calcular,
-                          child: const Center(child: Text('CALCULAR')),
+                        Center(
+                          child: ElevatedButton.icon(
+                            style: StyleApp.buttonStyle,
+                            icon: Icon(Icons.calculate),
+                            onPressed: calcular,
+                            label: Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Text('CALCULAR'),
+                            ),
+                            //child: const Center(child: Text('CALCULAR')),
+                          ),
                         ),
                       ],
                     ),
@@ -442,10 +444,10 @@ class _ComparadorState extends State<Comparador> {
     );
   }
 
-  void showSnackBar(String msg) {
+  /*void showSnackBar(String msg) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-  }
+  }*/
 
   Future<void> calcular() async {
     if (fileConsumos == null ||
@@ -472,14 +474,17 @@ class _ComparadorState extends State<Comparador> {
         double.tryParse(controllerPrecioPunta.text) == null ||
         double.tryParse(controllerPrecioLlano.text) == null ||
         double.tryParse(controllerPrecioValle.text) == null) {
-      showSnackBar('Datos incorrectos o insuficientes.');
+      //showSnackBar('Datos incorrectos o insuficientes.');
+      SnackBarHelper.show(context, 'Datos incorrectos o insuficientes.');
       return;
     }
 
     // READ FILE CSV
     List<List> csvData = await FileUtil.loadCsvData(fileConsumos!.path);
     if (csvData.isEmpty) {
-      showSnackBar('Imposible lectura de archivo de consumos.');
+      //showSnackBar('Imposible lectura de archivo de consumos.');
+      if (!mounted) return;
+      SnackBarHelper.show(context, 'Imposible lectura de archivo de consumos.');
       return;
     }
 
@@ -488,13 +493,23 @@ class _ComparadorState extends State<Comparador> {
     String keyFecha = keysHead.keyFecha;
     String keyConsumo = keysHead.keyConsumo;
     if (keyFecha.isEmpty || keyConsumo.isEmpty) {
-      showSnackBar('Error en la lectura del archivo de consumos.');
+      //showSnackBar('Error en la lectura del archivo de consumos.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la lectura del archivo de consumos.',
+      );
       return;
     }
     int? indexConsumo = getIndex(csvData.first, keyConsumo);
     int? indexFecha = getIndex(csvData.first, keyFecha);
     if (indexConsumo == null || indexFecha == null) {
-      showSnackBar('Error en la lectura del archivo de consumos.');
+      //showSnackBar('Error en la lectura del archivo de consumos.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la lectura del archivo de consumos.',
+      );
       return;
     }
 
@@ -516,7 +531,13 @@ class _ComparadorState extends State<Comparador> {
         if (DateFormat(
           'dd-MM-yyyy',
         ).parse(fechaFormat).isBefore(DateTime(2021, 6))) {
-          showSnackBar(
+          /*showSnackBar(
+            'Error: La fecha mínima es el 1 de junio de 2021, '
+            'cuando se aplica el vigente sistema de la tarifa eléctrica.',
+          );*/
+          if (!mounted) return;
+          SnackBarHelper.show(
+            context,
             'Error: La fecha mínima es el 1 de junio de 2021, '
             'cuando se aplica el vigente sistema de la tarifa eléctrica.',
           );
@@ -534,12 +555,19 @@ class _ComparadorState extends State<Comparador> {
         datosCsv.add((fecha: fechaFormat, hora: i, consumo: consumoDouble));
       }
     } catch (e) {
-      showSnackBar('Error en la captura de datos del archivo de consumos.');
+      //showSnackBar('Error en la captura de datos del archivo de consumos.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la captura de datos del archivo de consumos.',
+      );
       return;
     }
 
     if (datosCsv.isEmpty) {
-      showSnackBar('Error: archivo de consumos vacío.');
+      //showSnackBar('Error: archivo de consumos vacío.');
+      if (!mounted) return;
+      SnackBarHelper.show(context, 'Error: archivo de consumos vacío.');
       return;
     }
 
@@ -556,7 +584,12 @@ class _ComparadorState extends State<Comparador> {
     datesCsv = LinkedHashSet<DateTime>.from(datesCsv).toList();
 
     if (fechasCsv.isEmpty || datesCsv.isEmpty) {
-      showSnackBar('Error en la lectura del archivo de consumos.');
+      //showSnackBar('Error en la lectura del archivo de consumos.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la lectura del archivo de consumos.',
+      );
       return;
     }
 
@@ -582,7 +615,11 @@ class _ComparadorState extends State<Comparador> {
 
     mapFechaConsumos.forEach((k, v) {
       if (v.length != 24) {
-        showSnackBar('Error en la lectura del archivo de consumos.');
+        //showSnackBar('Error en la lectura del archivo de consumos.');
+        SnackBarHelper.show(
+          context,
+          'Error en la lectura del archivo de consumos.',
+        );
         return;
       }
       var date = DateFormat('dd-MM-yyyy').parse(k);
@@ -593,7 +630,12 @@ class _ComparadorState extends State<Comparador> {
         mapFechaConsumos.values.isEmpty ||
         mapDateConsumos.isEmpty ||
         mapDateConsumos.values.isEmpty) {
-      showSnackBar('Error en la lectura del archivo de consumos.');
+      //showSnackBar('Error en la lectura del archivo de consumos.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la lectura del archivo de consumos.',
+      );
       return;
     }
 
@@ -605,7 +647,12 @@ class _ComparadorState extends State<Comparador> {
 
     var fechasLimite = getRangoDates(datesCsv);
     if (fechasLimite.fecha1 == null || fechasLimite.fecha2 == null) {
-      showSnackBar('Error en la lectura del archivo de consumos.');
+      //showSnackBar('Error en la lectura del archivo de consumos.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la lectura del archivo de consumos.',
+      );
       return;
     }
     String fecha1 = fechasLimite.fecha1!;
@@ -618,14 +665,21 @@ class _ComparadorState extends State<Comparador> {
     );
     setState(() => downloadOnProgress = false);
     if (download.statusCode != 200) {
-      showSnackBar('Error en la descarga de los precios PVPC.');
+      //showSnackBar('Error en la descarga de los precios PVPC.');
+      if (!mounted) return;
+      SnackBarHelper.show(context, 'Error en la descarga de los precios PVPC.');
       return;
     }
     if (fecha1 != fecha2) {
       final String fileName = '$fecha1-$fecha2.zip';
       var extractZipOk = await FileUtil.extractZipPVPC(fileName);
       if (extractZipOk == false) {
-        showSnackBar('Error en la extracción de datos de los precios PVPC.');
+        //showSnackBar('Error en la extracción de datos de los precios PVPC.');
+        if (!mounted) return;
+        SnackBarHelper.show(
+          context,
+          'Error en la extracción de datos de los precios PVPC.',
+        );
         return;
       }
       FileUtil.deleteFile(fileName);
@@ -634,7 +688,12 @@ class _ComparadorState extends State<Comparador> {
     // appDocDirPath/PVPC/ => 20250213.json
     var archivos = await FileUtil.getFilesPVPC();
     if (archivos.isEmpty) {
-      showSnackBar('Error en la recuperación de los archivos de precios PVPC.');
+      //showSnackBar('Error en la recuperación de los archivos de precios PVPC.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la recuperación de los archivos de precios PVPC.',
+      );
       return;
     }
     Map<String, List<double>> mapFechaPrecios = {};
@@ -660,14 +719,18 @@ class _ComparadorState extends State<Comparador> {
         }
       }
     } catch (e) {
-      showSnackBar('Error en la consulta de los precios PVPC.');
+      //showSnackBar('Error en la consulta de los precios PVPC.');
+      if (!mounted) return;
+      SnackBarHelper.show(context, 'Error en la consulta de los precios PVPC.');
       return;
     } finally {
       await FileUtil.deleteDir();
     }
 
     if (mapFechaPrecios.isEmpty || mapFechaPrecios.values.isEmpty) {
-      showSnackBar('Error: archivo de precios PVPC vacío.');
+      //showSnackBar('Error: archivo de precios PVPC vacío.');
+      if (!mounted) return;
+      SnackBarHelper.show(context, 'Error: archivo de precios PVPC vacío.');
       return;
     }
 
@@ -682,7 +745,11 @@ class _ComparadorState extends State<Comparador> {
     Map<DateTime, List<double>> mapDatePrecios = {};
     mapFechaPrecios.forEach((k, v) {
       if (v.length != 24) {
-        showSnackBar('Error en la lectura del archivo de precios PVPC.');
+        //showSnackBar('Error en la lectura del archivo de precios PVPC.');
+        SnackBarHelper.show(
+          context,
+          'Error en la lectura del archivo de precios PVPC.',
+        );
         return;
       }
       var date = DateFormat('dd-MM-yyyy').parse(k);
@@ -711,19 +778,30 @@ class _ComparadorState extends State<Comparador> {
         mapFechaPreciosLibre[fecha] = preciosHoraLibre;
       }
     } catch (e) {
-      showSnackBar('Error en cálculo de precios.');
+      //showSnackBar('Error en cálculo de precios.');
+      if (!mounted) return;
+      SnackBarHelper.show(context, 'Error en cálculo de precios.');
       return;
     }
 
     if (mapFechaPreciosLibre.values.isEmpty) {
-      showSnackBar('Error: cálculo de precios de mercado libre.');
+      //showSnackBar('Error: cálculo de precios de mercado libre.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error: cálculo de precios de mercado libre.',
+      );
       return;
     }
 
     Map<DateTime, List<double>> mapDatePreciosLibre = {};
     mapFechaPreciosLibre.forEach((k, v) {
       if (v.length != 24) {
-        showSnackBar('Error en el cáculo de precios del mercado libre.');
+        //showSnackBar('Error en el cáculo de precios del mercado libre.');
+        SnackBarHelper.show(
+          context,
+          'Error en el cáculo de precios del mercado libre.',
+        );
         return;
       }
       var date = DateFormat('dd-MM-yyyy').parse(k);
@@ -765,11 +843,21 @@ class _ComparadorState extends State<Comparador> {
     );
 
     if (listasConsumoXPrecio.isEmpty) {
-      showSnackBar('Error en la obtención de los precios PVPC.');
+      //showSnackBar('Error en la obtención de los precios PVPC.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la obtención de los precios PVPC.',
+      );
       return;
     }
     if (listasConsumoXPrecioLibre.isEmpty) {
-      showSnackBar('Error en la obtención de los precios del mercado libre.');
+      //showSnackBar('Error en la obtención de los precios del mercado libre.');
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la obtención de los precios del mercado libre.',
+      );
       return;
     }
 

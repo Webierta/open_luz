@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../database/box_data.dart';
 import '../../../models/tarifa.dart';
 import '../../../theme/style_app.dart';
+import '../../nav/snack_bar_helper.dart';
 import 'head_tab.dart';
 
 class TimelapseTab extends StatefulWidget {
@@ -98,16 +99,20 @@ class _TimelapseTabState extends State<TimelapseTab> {
     }
   }
 
-  void showSnack(String title) {
+  /*void showSnack(String title) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     final snackbar = SnackBar(content: Text(title));
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
-  }
+  }*/
 
   void submitDuracion() async {
     duration = Duration(hours: horas, minutes: minutos);
     if (duration.inMinutes <= 60) {
-      showSnack('Duración insuficiente: debe superar 1 hora');
+      //showSnack('Duración insuficiente: debe superar 1 hora');
+      SnackBarHelper.show(
+        context,
+        'Duración insuficiente: debe superar 1 hora.',
+      );
       return;
     }
     if (mounted) {

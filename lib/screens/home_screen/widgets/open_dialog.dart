@@ -50,4 +50,40 @@ class OpenDialog {
       },
     );
   }
+
+  static Future<bool?> confirm(
+    BuildContext context, {
+    required IconData icon,
+    required String titulo,
+    required String contenido,
+  }) async {
+    return await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(icon, size: 40),
+              const SizedBox(width: 10),
+              Text(titulo),
+            ],
+          ),
+          //insetPadding: EdgeInsets.all(20),
+          //contentPadding: EdgeInsets.all(20),
+          content: Text('Confirmación rerquerida: $contenido'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

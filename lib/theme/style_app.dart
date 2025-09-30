@@ -68,4 +68,14 @@ class StyleApp {
 
   // static TextStyle get textFontEmoji =>
   //     const TextStyle().apply(fontFamily: 'Noto Color Emoji');
+
+  static const buttonStyle = ButtonStyle(
+    fixedSize: WidgetStatePropertyAll(Size(300, 60)),
+    iconSize: WidgetStatePropertyAll(40),
+    shape: WidgetStatePropertyAll(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+    ),
+  );
 }

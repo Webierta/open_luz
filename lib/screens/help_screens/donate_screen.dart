@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../../theme/style_app.dart';
 import '../../utils/constantes.dart';
 import '../../utils/launch_url.dart';
+import '../nav/snack_bar_helper.dart';
 import 'widgets/head_screen.dart';
 
 const String btcAddress = '15ZpNzqbYFx9P7wg4U438JMwZr2q3W6fkS';
@@ -154,12 +155,16 @@ class DonateScreen extends StatelessWidget {
                                 const ClipboardData(text: btcAddress),
                               );
                               if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              /*ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
                                     'BTC Address copied to Clipboard.',
                                   ),
                                 ),
+                              );*/
+                              SnackBarHelper.show(
+                                context,
+                                'BTC Address copied to Clipboard.',
                               );
                             },
                           ),

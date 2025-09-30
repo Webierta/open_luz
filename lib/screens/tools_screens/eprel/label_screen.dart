@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../theme/style_app.dart';
+import '../../nav/pop_scope_helper.dart';
 import 'services/api.dart';
 import 'widgets/info_label.dart';
 import 'models/product_groups.dart';
@@ -90,130 +91,146 @@ class _LabelScreenState extends State<LabelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Etiqueta energética'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const InfoLabel()),
-              );
-            },
-            icon: const Icon(Icons.info),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-          decoration: StyleApp.mainDecoration,
-          height: double.infinity,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Consigue online la etiqueta energética de un aparato eléctrico para conocer '
-                    'su eficiencia energética.',
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  readOnly: true,
-                  controller: controllerGrupo,
-                  textAlignVertical: TextAlignVertical.center,
-                  keyboardType: TextInputType.multiline,
-                  minLines: 1,
-                  maxLines: 2,
-                  style: Theme.of(context).textTheme.titleLarge,
-                  decoration: InputDecoration(
-                    filled: true,
-                    //fillColor: StyleApp.blueGrey200,
-                    prefixIcon: Image.asset(
-                      productGroups.imagen,
-                      color: Colors.white,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: PopScopeHelper.onPopInvoked(context),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Etiqueta energética'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const InfoLabel()),
+                );
+              },
+              icon: const Icon(Icons.info),
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            decoration: StyleApp.mainDecoration,
+            height: double.infinity,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Consigue online la etiqueta energética de un aparato eléctrico para conocer '
+                      'su eficiencia energética.',
                     ),
-                    prefixIconConstraints: const BoxConstraints(maxWidth: 100),
-                    suffixIcon: PopupMenuButton<ProductGroups>(
-                      initialValue: productGroups,
-                      icon: const CircleAvatar(child: Icon(Icons.expand_more)),
-                      itemBuilder: (context) {
-                        return ProductGroups.values
-                            .map(
-                              (grupo) => PopupMenuItem<ProductGroups>(
-                                value: grupo,
-                                child: ListTile(
-                                  leading: Image.asset(
-                                    grupo.imagen,
-                                    color: Colors.white,
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    readOnly: true,
+                    controller: controllerGrupo,
+                    textAlignVertical: TextAlignVertical.center,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 2,
+                    style: Theme.of(context).textTheme.titleLarge,
+                    decoration: InputDecoration(
+                      filled: true,
+                      //fillColor: StyleApp.blueGrey200,
+                      prefixIcon: Image.asset(
+                        productGroups.imagen,
+                        color: Colors.white,
+                      ),
+                      prefixIconConstraints: const BoxConstraints(
+                        maxWidth: 100,
+                      ),
+                      suffixIcon: PopupMenuButton<ProductGroups>(
+                        initialValue: productGroups,
+                        icon: const CircleAvatar(
+                          child: Icon(Icons.expand_more),
+                        ),
+                        itemBuilder: (context) {
+                          return ProductGroups.values
+                              .map(
+                                (grupo) => PopupMenuItem<ProductGroups>(
+                                  value: grupo,
+                                  child: ListTile(
+                                    leading: Image.asset(
+                                      grupo.imagen,
+                                      color: Colors.white,
+                                    ),
+                                    title: Text(grupo.nombre),
                                   ),
-                                  title: Text(grupo.nombre),
                                 ),
-                              ),
-                            )
-                            .toList();
-                      },
-                      onSelected: (product) {
-                        if (product.nombre != controllerGrupo.text) {
-                          controllerGrupo.text = product.nombre.replaceFirst(
-                            ' ',
-                            '\n',
-                          );
-                          setState(() {
-                            errorInputMarca = null;
-                            errorInputModelo = null;
-                            controllerMarca.clear();
-                            controllerModelo.clear();
-                            controllerModeloSuggested.clear();
-                            label = const SizedBox(height: 0);
-                            productGroups = product;
-                          });
-                        }
-                      },
+                              )
+                              .toList();
+                        },
+                        onSelected: (product) {
+                          if (product.nombre != controllerGrupo.text) {
+                            controllerGrupo.text = product.nombre.replaceFirst(
+                              ' ',
+                              '\n',
+                            );
+                            setState(() {
+                              errorInputMarca = null;
+                              errorInputModelo = null;
+                              controllerMarca.clear();
+                              controllerModelo.clear();
+                              controllerModeloSuggested.clear();
+                              label = const SizedBox(height: 0);
+                              productGroups = product;
+                            });
+                          }
+                        },
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: controllerMarca,
-                  decoration: InputDecoration(
-                    filled: true,
-                    labelText: 'Marca',
-                    labelStyle: const TextStyle(height: -0.4),
-                    errorText: errorInputMarca,
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        controllerMarca.clear();
-                      },
-                      icon: const Icon(Icons.backspace),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: controllerMarca,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: 'Marca',
+                      labelStyle: const TextStyle(height: -0.4),
+                      errorText: errorInputMarca,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          controllerMarca.clear();
+                        },
+                        icon: const Icon(Icons.backspace),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: controllerModelo,
-                  decoration: InputDecoration(
-                    filled: true,
-                    labelText: 'Modelo',
-                    labelStyle: const TextStyle(height: -0.4),
-                    errorText: errorInputModelo,
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        controllerModelo.clear();
-                      },
-                      icon: const Icon(Icons.backspace),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: controllerModelo,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: 'Modelo',
+                      labelStyle: const TextStyle(height: -0.4),
+                      errorText: errorInputModelo,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          controllerModelo.clear();
+                        },
+                        icon: const Icon(Icons.backspace),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(onPressed: buscar, child: const Text('BUSCAR')),
-                const SizedBox(height: 20),
-                Flexible(child: label),
-              ],
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    style: StyleApp.buttonStyle,
+                    icon: Icon(Icons.search),
+                    onPressed: buscar,
+                    label: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text('BUSCAR'),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Flexible(child: label),
+                ],
+              ),
             ),
           ),
         ),

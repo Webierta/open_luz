@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../theme/style_app.dart';
 import '../../utils/shared_prefs.dart';
-import '../home_screen/home_screen.dart';
+import '../nav/pop_scope_helper.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -99,15 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (bool didPop, Object? result) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(isFirstLaunch: false),
-          ),
-        );
-      },
+      onPopInvokedWithResult: PopScopeHelper.onPopInvoked(context),
       child: Scaffold(
         appBar: AppBar(title: const Text('Ajustes')),
         body: SafeArea(

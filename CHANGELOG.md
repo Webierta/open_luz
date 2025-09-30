@@ -2,6 +2,12 @@
 
 Este archivo registra y documenta los cambios más notables a lo largo del desarrollo del proyecto.
 
+## [2.0.6] - 2026-09-30
+
+### Changed
+
+- Correcciones menores y pequeños ajustes. 
+
 ## [2.0.5] - 2026-09-26
 
 ### Fixed
@@ -53,6 +59,7 @@ Este archivo registra y documenta los cambios más notables a lo largo del desar
 - First beta release.
 - Continuación y revisión del Proyecto del mismo autor [Tarifa Luz](https://github.com/Webierta/tarifa_luz).
 
+[2.0.6]: https://github.com/Webierta/open_luz/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/Webierta/open_luz/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/Webierta/open_luz/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/Webierta/open_luz/compare/v2.0.2...v2.0.3

@@ -4,6 +4,8 @@ import '../../../database/box_data.dart';
 import '../../../database/storage.dart';
 import '../../../theme/style_app.dart';
 import '../../home_screen/home_screen.dart';
+import '../../nav/pop_scope_helper.dart';
+import '../../nav/snack_bar_helper.dart';
 import 'graphics/grafico_compare.dart';
 
 class StorageScreen extends StatefulWidget {
@@ -83,25 +85,17 @@ class _StorageScreenState extends State<StorageScreen> {
     );
   }
 
-  void showSnack(String title) {
+  /*void showSnack(String title) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     final snackbar = SnackBar(content: Text(title));
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (bool didPop, Object? result) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(isFirstLaunch: false),
-          ),
-        );
-      },
+      onPopInvokedWithResult: PopScopeHelper.onPopInvoked(context),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Archivo'),
@@ -109,7 +103,11 @@ class _StorageScreenState extends State<StorageScreen> {
             IconButton(
               onPressed: () async {
                 if (listBoxData.isEmpty) {
-                  showSnack('Archivo sin datos. Nada que hacer');
+                  //showSnack('Archivo sin datos. Nada que hacer');
+                  SnackBarHelper.show(
+                    context,
+                    'Archivo sin datos. Nada que hacer.',
+                  );
                 } else {
                   if (await confirmDelete() == true) {
                     storage.clearBox();
@@ -190,8 +188,9 @@ class _StorageScreenState extends State<StorageScreen> {
                                 ),
                               ),
                               onDismissed: (direction) {
-                                showSnack(
-                                  'Los datos del día ${item.fechaddMMyy} han sido eliminados',
+                                SnackBarHelper.show(
+                                  context,
+                                  'Los datos del día ${item.fechaddMMyy} han sido eliminados.',
                                 );
                                 listBoxData.remove(item);
                                 storage.deleteBoxData(item);
@@ -225,7 +224,11 @@ class _StorageScreenState extends State<StorageScreen> {
                                                 () => boxDataIsChecked[item] =
                                                     true,
                                               )
-                                            : showSnack('Máximo 4 fechas.');
+                                            //: showSnack('Máximo 4 fechas.');
+                                            : SnackBarHelper.show(
+                                                context,
+                                                'Máximo 4 fechas.',
+                                              );
                                       } else if (value == false) {
                                         setState(
                                           () => boxDataIsChecked[item] = false,

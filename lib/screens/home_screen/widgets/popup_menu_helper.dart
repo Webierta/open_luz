@@ -5,8 +5,10 @@ typedef PopupMenuCallback = void Function(OptionsMenu value);
 enum OptionsMenu {
   fecha('Seleccionar fecha', Icons.today),
   intervalo('Seleccionar intervalo', Icons.date_range),
-  divider(),
-  delete('Eliminar registro', Icons.delete);
+  divider1(),
+  delete('Eliminar registro', Icons.delete),
+  divider2(),
+  exit('Salir', Icons.exit_to_app);
 
   final String? texto;
   final IconData? icon;
@@ -33,7 +35,8 @@ class PopupMenuHelper {
       onSelected: onSelected,
       itemBuilder: (BuildContext context) {
         return List.generate(optionsList.length, (index) {
-          if (optionsList[index] == OptionsMenu.divider) {
+          if (optionsList[index] == OptionsMenu.divider1 ||
+              optionsList[index] == OptionsMenu.divider2) {
             return PopupMenuDivider();
           }
           return PopupMenuItem<OptionsMenu>(

@@ -28,7 +28,7 @@ O descarga el archivo APK para tu dispositivo desde la [última versión publica
 
 ### En Linux (deb)
 
-Descarga el [archivo open_luz_deb.deb](https://github.com/Webierta/open_luz/releases/latest/download/open_luz_deb.deb) desde la [última versión publicada](https://github.com/Webierta/open_luz/releases). 
+Descarga el archivo [open_luz_deb.deb](https://github.com/Webierta/open_luz/releases/latest/download/open_luz_deb.deb) desde la [última versión publicada](https://github.com/Webierta/open_luz/releases). 
 
 La aplicación se instala en **/usr/local/bin/OpenLuz/**
 
