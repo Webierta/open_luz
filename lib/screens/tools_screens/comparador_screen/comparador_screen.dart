@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:open_luz/screens/tools_screens/comparador_screen/widgets/open_aviso.dart';
 import 'package:path/path.dart' as path;
 
 import '../../../database/box_data.dart';
@@ -18,6 +19,7 @@ import '../../../utils/shared_prefs.dart';
 import '../../nav/pop_scope_helper.dart';
 import '../../nav/snack_bar_helper.dart';
 import 'widgets/comparador_aviso.dart';
+import 'widgets/potencia_aviso.dart';
 import 'widgets/resultado.dart';
 
 typedef LineaCsv = ({String fecha, int hora, double consumo});
@@ -58,8 +60,8 @@ class _ComparadorState extends State<Comparador> {
   @override
   void initState() {
     loadSharedPrefs();
-    controllerPotenciaPVPCPuntaPrecio.text = '0.069376';
-    controllerPotenciaPVPCVallePrecio.text = '0.002647';
+    controllerPotenciaPVPCPuntaPrecio.text = '0,073782'; // '0.069376';
+    controllerPotenciaPVPCVallePrecio.text = '0,001911'; // '0.002647';
     super.initState();
   }
 
@@ -108,28 +110,7 @@ class _ComparadorState extends State<Comparador> {
           actions: [
             IconButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog.fullscreen(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            onPressed: () => Navigator.pop(context),
-                            icon: Icon(Icons.close),
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: const ComparadorAviso(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
+                OpenAviso.show(context, widget: ComparadorAviso());
               },
               icon: Icon(Icons.warning_amber, color: Colors.red),
             ),
@@ -177,12 +158,26 @@ class _ComparadorState extends State<Comparador> {
                         ),
                         const SizedBox(height: 10),
                         // PVPC
-                        Text(
-                          '💡 PVPC',
-                          style: TextStyle(
-                            color: StyleApp.onBackgroundColor,
-                            fontSize: 16,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '💡 PVPC',
+                              style: TextStyle(
+                                color: StyleApp.onBackgroundColor,
+                                fontSize: 16,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                OpenAviso.show(
+                                  context,
+                                  widget: PotenciaAviso(),
+                                );
+                              },
+                              icon: Icon(Icons.help_outline),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 4),
                         ClipPath(

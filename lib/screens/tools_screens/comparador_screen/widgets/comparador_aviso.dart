@@ -18,36 +18,37 @@ class ComparadorAviso extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
+        const SizedBox(height: 20),
         const Text(
           'El comparador de tarias todavía es una FUNCIÓN '
           'EXPERIMENTAL en fase de desarrollo.',
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         const Text(
           'Esta nueva herramienta compara una simulación de facturas de la '
           'tarifa PVPC y del mercado libre calculadas en base a un periodo '
           'concreto de consumos.',
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         const Text(
           'Las facturas estimadas no incluyen impuestos ni otros conceptos '
           'como el bono social o el alquiler del contador.',
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         const Text(
           'Para utilizarla debes adjuntar un fichero con extensión csv '
           'con los datos horarios de tu consumo. Puedes '
           'descargarlo en la página web de tu distribuidora '
           '(no confundir con tu comercializadora).',
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         const Text(
           'Puedes conocer tu distribuidora en el apartado '
           'DATOS DEL CONTRATO de tu factura. En su web selecciona '
           'Consumo registrado o Consumo por factura '
           'para descargar un archivo csv con tus consumos.',
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         Text.rich(
           TextSpan(
             //style: Theme.of(context).textTheme.bodyLarge,
@@ -73,7 +74,7 @@ class ComparadorAviso extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         Text.rich(
           TextSpan(
             //style: Theme.of(context).textTheme.bodyLarge,
@@ -107,7 +108,7 @@ class ComparadorAviso extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         const Text(
           'Además, hay distribuidoras que no proporcionan un fichero CSV, '
           'sino un fichero en formato Excel (XLS). En ese caso, se puede convertir '
@@ -116,7 +117,7 @@ class ComparadorAviso extends StatelessWidget {
           '[ ; ] y Delimitador de cadena: [ " ] ). No obstante, no hay ninguna '
           'garantía de que el resultado sea satisfactorio.',
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         const Text(
           'La aplicación no almacena ningún dato del archivo de consumos. '
           'Opcionalmente, desde Ajustes puedes elegir que los precios '
