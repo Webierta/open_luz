@@ -1,36 +1,32 @@
-import 'dart:collection';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:open_luz/screens/tools_screens/comparador_screen/widgets/open_aviso.dart';
 import 'package:path/path.dart' as path;
 
 import '../../../database/box_data.dart';
 import '../../../database/storage.dart';
-import '../../../models/tarifa.dart';
 import '../../../theme/style_app.dart';
-import '../../../utils/estados.dart';
 import '../../../utils/file_util.dart';
-import '../../../utils/horario_verano.dart';
 import '../../../utils/shared_prefs.dart';
 import '../../nav/pop_scope_helper.dart';
 import '../../nav/snack_bar_helper.dart';
+import 'comparador.dart';
+import 'precio_potencia_pvpc.dart';
 import 'widgets/comparador_aviso.dart';
+import 'widgets/open_aviso.dart';
 import 'widgets/potencia_aviso.dart';
 import 'widgets/resultado.dart';
 
 typedef LineaCsv = ({String fecha, int hora, double consumo});
 
-class Comparador extends StatefulWidget {
-  const Comparador({super.key});
+class ComparadorScreen extends StatefulWidget {
+  const ComparadorScreen({super.key});
   @override
-  State<Comparador> createState() => _ComparadorState();
+  State<ComparadorScreen> createState() => _ComparadorScreenState();
 }
 
-class _ComparadorState extends State<Comparador> {
+class _ComparadorScreenState extends State<ComparadorScreen> {
   TextEditingController controllerFile = TextEditingController();
   TextEditingController controllerPotenciaPVPCPunta = TextEditingController();
   TextEditingController controllerPotenciaPVPCValle = TextEditingController();
@@ -57,11 +53,14 @@ class _ComparadorState extends State<Comparador> {
   final SharedPrefs sharedPrefs = SharedPrefs();
   Storage storage = Storage();
 
+  PrecioPotenciaPVPC yearDefault = PrecioPotenciaPVPC.values.first;
+  PrecioPotenciaPVPC? yearSelect = PrecioPotenciaPVPC.values.first;
+
   @override
   void initState() {
     loadSharedPrefs();
-    controllerPotenciaPVPCPuntaPrecio.text = '0,073782'; // '0.069376';
-    controllerPotenciaPVPCVallePrecio.text = '0,001911'; // '0.002647';
+    controllerPotenciaPVPCPuntaPrecio.text = '0.073782'; // '0.069376';
+    controllerPotenciaPVPCVallePrecio.text = '0.001911'; // '0.002647';
     super.initState();
   }
 
@@ -97,6 +96,16 @@ class _ComparadorState extends State<Comparador> {
       controllerFile.text = path.basename(resultCsv.fileCsv!.path);
       setState(() => fileConsumos = resultCsv.fileCsv);
     }
+  }
+
+  void updatePrecioPotenciaPVPC(PrecioPotenciaPVPC? year) {
+    if (year == null) {
+      return;
+    }
+    controllerPotenciaPVPCPuntaPrecio.text = year.precioDiaPunta
+        .toStringAsFixed(6);
+    controllerPotenciaPVPCVallePrecio.text = year.precioDiaValle
+        .toStringAsFixed(6);
   }
 
   @override
@@ -192,9 +201,26 @@ class _ComparadorState extends State<Comparador> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Potencia contratada',
-                                  style: Theme.of(context).textTheme.titleLarge,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Potencia contratada',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleLarge,
+                                    ),
+                                    DropdownMenu<PrecioPotenciaPVPC>(
+                                      initialSelection: yearDefault,
+                                      dropdownMenuEntries:
+                                          PrecioPotenciaPVPC.entries,
+                                      onSelected: (PrecioPotenciaPVPC? year) {
+                                        setState(() => yearSelect = year);
+                                        updatePrecioPotenciaPVPC(year);
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 Row(
                                   children: [
@@ -439,11 +465,6 @@ class _ComparadorState extends State<Comparador> {
     );
   }
 
-  /*void showSnackBar(String msg) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-  }*/
-
   Future<void> calcular() async {
     if (fileConsumos == null ||
         controllerFile.text.isEmpty ||
@@ -469,37 +490,23 @@ class _ComparadorState extends State<Comparador> {
         double.tryParse(controllerPrecioPunta.text) == null ||
         double.tryParse(controllerPrecioLlano.text) == null ||
         double.tryParse(controllerPrecioValle.text) == null) {
-      //showSnackBar('Datos incorrectos o insuficientes.');
       SnackBarHelper.show(context, 'Datos incorrectos o insuficientes.');
       return;
     }
 
-    // READ FILE CSV
-    List<List> csvData = await FileUtil.loadCsvData(fileConsumos!.path);
+    /// READ FILE CSV
+    List<List> csvData = await Comparador.readFile(fileConsumos!);
     if (csvData.isEmpty) {
-      //showSnackBar('Imposible lectura de archivo de consumos.');
       if (!mounted) return;
       SnackBarHelper.show(context, 'Imposible lectura de archivo de consumos.');
       return;
     }
 
-    // READ HEAD CSV: KEYS AND INDEX FECHA Y CONSUMO
-    var keysHead = getKeysHead(csvData.first);
+    /// READ HEAD CSV: KEYS AND INDEX FECHA Y CONSUMO
+    var keysHead = Comparador.readHeadCsv(csvData);
     String keyFecha = keysHead.keyFecha;
     String keyConsumo = keysHead.keyConsumo;
     if (keyFecha.isEmpty || keyConsumo.isEmpty) {
-      //showSnackBar('Error en la lectura del archivo de consumos.');
-      if (!mounted) return;
-      SnackBarHelper.show(
-        context,
-        'Error en la lectura del archivo de consumos.',
-      );
-      return;
-    }
-    int? indexConsumo = getIndex(csvData.first, keyConsumo);
-    int? indexFecha = getIndex(csvData.first, keyFecha);
-    if (indexConsumo == null || indexFecha == null) {
-      //showSnackBar('Error en la lectura del archivo de consumos.');
       if (!mounted) return;
       SnackBarHelper.show(
         context,
@@ -508,49 +515,36 @@ class _ComparadorState extends State<Comparador> {
       return;
     }
 
-    // GET DATOS CSV: FECHAS Y CONSUMOS
-    List<LineaCsv> datosCsv = [];
-    try {
-      for (int i = 0; i < csvData.length; i++) {
-        if (i == 0) continue;
-        // FECHA
-        var fecha = csvData[i][indexFecha].toString();
-        var fechaFormat = fecha.replaceAll(
-          '/',
-          '-',
-        ); // 13/02/2025 => 30-03-2025
-        if (fecha.contains(' ')) {
-          // 2023/06/09 01:00
-          fechaFormat = fecha.substring(0, fecha.indexOf(' '));
-        }
-        if (DateFormat(
-          'dd-MM-yyyy',
-        ).parse(fechaFormat).isBefore(DateTime(2021, 6))) {
-          /*showSnackBar(
-            'Error: La fecha mínima es el 1 de junio de 2021, '
-            'cuando se aplica el vigente sistema de la tarifa eléctrica.',
-          );*/
-          if (!mounted) return;
-          SnackBarHelper.show(
-            context,
-            'Error: La fecha mínima es el 1 de junio de 2021, '
-            'cuando se aplica el vigente sistema de la tarifa eléctrica.',
-          );
-          return;
-        }
-        // CONSUMO
-        var consumo = csvData[i][indexConsumo].toString();
-        consumo = consumo.replaceAll(',', '.');
-        if (double.tryParse(consumo) == null) throw Error();
-        double consumoDouble = double.tryParse(consumo)!;
-        if (!keyConsumo.contains('kWh')) {
-          consumoDouble = consumoDouble / 1000;
-        }
-        // DATOS
-        datosCsv.add((fecha: fechaFormat, hora: i, consumo: consumoDouble));
-      }
-    } catch (e) {
-      //showSnackBar('Error en la captura de datos del archivo de consumos.');
+    int? indexConsumo = Comparador.getIndexConsumo(csvData, keyConsumo);
+    int? indexFecha = Comparador.getIndexFecha(csvData, keyFecha);
+    if (indexConsumo == null || indexFecha == null) {
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en la lectura del archivo de consumos.',
+      );
+      return;
+    }
+
+    /// GET DATOS CSV: FECHAS Y CONSUMOS
+    var datos = Comparador.getDatos(
+      csvData: csvData,
+      keyConsumo: keyConsumo,
+      indexFecha: indexFecha,
+      indexConsumo: indexConsumo,
+    );
+
+    int errorType = datos.errorType;
+    if (errorType == 1) {
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error: La fecha mínima es el 1 de junio de 2021, '
+        'cuando se aplica el vigente sistema de la tarifa eléctrica.',
+      );
+      return;
+    }
+    if (errorType == 2) {
       if (!mounted) return;
       SnackBarHelper.show(
         context,
@@ -559,27 +553,18 @@ class _ComparadorState extends State<Comparador> {
       return;
     }
 
+    List<LineaCsv> datosCsv = datos.datosCsv;
     if (datosCsv.isEmpty) {
-      //showSnackBar('Error: archivo de consumos vacío.');
       if (!mounted) return;
       SnackBarHelper.show(context, 'Error: archivo de consumos vacío.');
       return;
     }
 
-    // READ DATOS CSV: FECHAS Y CONSUMOS
-    Map<String, List<double>> mapFechaConsumos = {};
-    Map<DateTime, List<double>> mapDateConsumos = {};
-    List<String> fechasCsv = [];
-    List<DateTime> datesCsv = [];
-    for (var datoCsv in datosCsv) {
-      fechasCsv.add(datoCsv.fecha);
-      datesCsv.add(DateFormat('dd-MM-yyyy').parse(datoCsv.fecha));
-    }
-    fechasCsv = LinkedHashSet<String>.from(fechasCsv).toList();
-    datesCsv = LinkedHashSet<DateTime>.from(datesCsv).toList();
-
+    /// READ DATOS CSV: FECHAS Y CONSUMOS
+    var csv = Comparador.readFechas(datosCsv);
+    var fechasCsv = csv.fechas;
+    var datesCsv = csv.dates;
     if (fechasCsv.isEmpty || datesCsv.isEmpty) {
-      //showSnackBar('Error en la lectura del archivo de consumos.');
       if (!mounted) return;
       SnackBarHelper.show(
         context,
@@ -588,44 +573,16 @@ class _ComparadorState extends State<Comparador> {
       return;
     }
 
-    for (var fecha in fechasCsv) {
-      mapFechaConsumos[fecha] = [];
-    }
-
-    for (var datoCsv in datosCsv) {
-      for (var fechaKey in mapFechaConsumos.keys) {
-        if (datoCsv.fecha == fechaKey) {
-          mapFechaConsumos[fechaKey]?.add(datoCsv.consumo);
-        }
-      }
-    }
-
-    for (var k in mapFechaConsumos.keys) {
-      var dateDT = DateFormat('dd-MM-yyyy').parse(k);
-      var fechaString = DateFormat('yyyy-MM-dd').format(dateDT);
-      if (HorarioVerano.check(fechaString)) {
-        mapFechaConsumos[k]?.insert(2, 0);
-      }
-    }
-
-    mapFechaConsumos.forEach((k, v) {
-      if (v.length != 24) {
-        //showSnackBar('Error en la lectura del archivo de consumos.');
-        SnackBarHelper.show(
-          context,
-          'Error en la lectura del archivo de consumos.',
-        );
-        return;
-      }
-      var date = DateFormat('dd-MM-yyyy').parse(k);
-      mapDateConsumos[date] = v;
-    });
-
+    var consumos = Comparador.readConsumos(
+      datosCsv: datosCsv,
+      fechasCsv: fechasCsv,
+    );
+    var mapFechaConsumos = consumos.mapFechaConsumos;
+    var mapDateConsumos = consumos.mapDateConsumos;
     if (mapFechaConsumos.isEmpty ||
         mapFechaConsumos.values.isEmpty ||
         mapDateConsumos.isEmpty ||
         mapDateConsumos.values.isEmpty) {
-      //showSnackBar('Error en la lectura del archivo de consumos.');
       if (!mounted) return;
       SnackBarHelper.show(
         context,
@@ -634,15 +591,10 @@ class _ComparadorState extends State<Comparador> {
       return;
     }
 
-    // GET PRECIOS BY FECHAS
+    /// GET PRECIOS BY FECHAS
     // PVPC
-    /*var fechasLimite = getRangoFormat(fechasCsv);
-    var fecha1 = fechasLimite.fecha1;
-    var fecha2 = fechasLimite.fecha2;*/
-
-    var fechasLimite = getRangoDates(datesCsv);
+    var fechasLimite = Comparador.getFechas(datesCsv);
     if (fechasLimite.fecha1 == null || fechasLimite.fecha2 == null) {
-      //showSnackBar('Error en la lectura del archivo de consumos.');
       if (!mounted) return;
       SnackBarHelper.show(
         context,
@@ -654,22 +606,17 @@ class _ComparadorState extends State<Comparador> {
     String fecha2 = fechasLimite.fecha2!;
 
     setState(() => downloadOnProgress = true);
-    var download = await FileUtil.downloadFilePVPC(
-      fecha1: fecha1,
-      fecha2: fecha2,
-    );
+    var download = await Comparador.downloadFile(fecha1, fecha2);
     setState(() => downloadOnProgress = false);
     if (download.statusCode != 200) {
-      //showSnackBar('Error en la descarga de los precios PVPC.');
       if (!mounted) return;
       SnackBarHelper.show(context, 'Error en la descarga de los precios PVPC.');
       return;
     }
     if (fecha1 != fecha2) {
       final String fileName = '$fecha1-$fecha2.zip';
-      var extractZipOk = await FileUtil.extractZipPVPC(fileName);
-      if (extractZipOk == false) {
-        //showSnackBar('Error en la extracción de datos de los precios PVPC.');
+      var extractZip = await Comparador.extractZip(fileName);
+      if (extractZip == false) {
         if (!mounted) return;
         SnackBarHelper.show(
           context,
@@ -677,13 +624,12 @@ class _ComparadorState extends State<Comparador> {
         );
         return;
       }
-      FileUtil.deleteFile(fileName);
+      Comparador.deleteFile(fileName);
     }
 
     // appDocDirPath/PVPC/ => 20250213.json
-    var archivos = await FileUtil.getFilesPVPC();
+    var archivos = await Comparador.getFilesPVPC();
     if (archivos.isEmpty) {
-      //showSnackBar('Error en la recuperación de los archivos de precios PVPC.');
       if (!mounted) return;
       SnackBarHelper.show(
         context,
@@ -691,123 +637,70 @@ class _ComparadorState extends State<Comparador> {
       );
       return;
     }
-    Map<String, List<double>> mapFechaPrecios = {};
-    try {
-      for (var archivo in archivos) {
-        String contents = await archivo.readAsString();
-        final Map<String, dynamic> data = jsonDecode(contents);
-        List<dynamic> pvpcList = data['PVPC'];
-        List<String> listaDias = [];
-        List<String> listaPrecios = [];
-        for (var pvpc in pvpcList) {
-          listaDias.add(pvpc['Dia']);
-          listaPrecios.add(pvpc['PCB']);
-          // List<String> listaHoras = pvpc['Hora'];
-        }
-        if (listaDias.isEmpty || listaPrecios.isEmpty) throw Error();
-        String fecha = listaDias.first.replaceAll('/', '-'); // 30-03-2025
-        mapFechaPrecios[fecha] = [];
-        for (var precio in listaPrecios) {
-          var precioDouble =
-              double.tryParse(precio.replaceAll(',', '.'))! / 1000;
-          mapFechaPrecios[fecha]?.add(precioDouble);
-        }
-      }
-    } catch (e) {
-      //showSnackBar('Error en la consulta de los precios PVPC.');
+
+    var mapFechaPrecios = await Comparador.readFiles(archivos);
+    if (mapFechaPrecios.isEmpty || mapFechaPrecios.values.isEmpty) {
       if (!mounted) return;
       SnackBarHelper.show(context, 'Error en la consulta de los precios PVPC.');
       return;
-    } finally {
-      await FileUtil.deleteDir();
     }
 
-    if (mapFechaPrecios.isEmpty || mapFechaPrecios.values.isEmpty) {
-      //showSnackBar('Error: archivo de precios PVPC vacío.');
+    mapFechaPrecios = Comparador.checkVerano(mapFechaPrecios);
+
+    var getDatePrecios = Comparador.getDatePrecios(mapFechaPrecios);
+    var error24 = getDatePrecios.error24;
+    if (error24) {
       if (!mounted) return;
-      SnackBarHelper.show(context, 'Error: archivo de precios PVPC vacío.');
+      SnackBarHelper.show(
+        context,
+        'Error en la lectura del archivo de precios PVPC.',
+      );
       return;
     }
-
-    for (var k in mapFechaPrecios.keys) {
-      var dateDT = DateFormat('dd-MM-yyyy').parse(k);
-      var fechaString = DateFormat('yyyy-MM-dd').format(dateDT);
-      if (HorarioVerano.check(fechaString)) {
-        mapFechaPrecios[k]?.insert(2, 0);
-      }
-    }
-
-    Map<DateTime, List<double>> mapDatePrecios = {};
-    mapFechaPrecios.forEach((k, v) {
-      if (v.length != 24) {
-        //showSnackBar('Error en la lectura del archivo de precios PVPC.');
-        SnackBarHelper.show(
-          context,
-          'Error en la lectura del archivo de precios PVPC.',
-        );
-        return;
-      }
-      var date = DateFormat('dd-MM-yyyy').parse(k);
-      // var fecha = DateFormat('yyyy-MM-dd').format(DateTime(year, mes, dia));
-      // DateTime date = DateTime.parse(fecha);
-      mapDatePrecios[date] = v;
-    });
+    var mapDatePrecios = getDatePrecios.mapDatePrecios;
 
     // MERCADO LIBRE
-    Map<String, List<double>> mapFechaPreciosLibre = {};
-    try {
-      for (var fecha in mapFechaPrecios.keys) {
-        // fecha 30-03-2025
-        List<double> preciosHoraLibre = <double>[];
-        for (var h = 0; h < 24; h++) {
-          DateTime date = DateFormat('dd-MM-yyyy').parse(fecha);
-          date = DateTime(date.year, date.month, date.day, h);
-          var periodo = Tarifa.getPeriodo(date);
-          double precioHora = switch (periodo) {
-            Periodo.punta => double.tryParse(controllerPrecioPunta.text)!,
-            Periodo.llano => double.tryParse(controllerPrecioLlano.text)!,
-            Periodo.valle => double.tryParse(controllerPrecioValle.text)!,
-          };
-          preciosHoraLibre.add(precioHora);
-        }
-        mapFechaPreciosLibre[fecha] = preciosHoraLibre;
-      }
-    } catch (e) {
-      //showSnackBar('Error en cálculo de precios.');
+    double precioPunta = double.tryParse(controllerPrecioPunta.text)!;
+    double precioLlano = double.tryParse(controllerPrecioLlano.text)!;
+    double precioValle = double.tryParse(controllerPrecioValle.text)!;
+
+    var getPreciosLibre = Comparador.getPreciosLibre(
+      mapFechaPrecios,
+      precioPunta,
+      precioLlano,
+      precioValle,
+    );
+    var errorGetPreciosLibre = getPreciosLibre.error;
+    if (errorGetPreciosLibre) {
       if (!mounted) return;
       SnackBarHelper.show(context, 'Error en cálculo de precios.');
       return;
     }
-
+    var mapFechaPreciosLibre = getPreciosLibre.mapFechaPreciosLibre;
     if (mapFechaPreciosLibre.values.isEmpty) {
-      //showSnackBar('Error: cálculo de precios de mercado libre.');
       if (!mounted) return;
       SnackBarHelper.show(
         context,
-        'Error: cálculo de precios de mercado libre.',
+        'Error en cálculo de precios de mercado libre.',
       );
       return;
     }
 
-    Map<DateTime, List<double>> mapDatePreciosLibre = {};
-    mapFechaPreciosLibre.forEach((k, v) {
-      if (v.length != 24) {
-        //showSnackBar('Error en el cáculo de precios del mercado libre.');
-        SnackBarHelper.show(
-          context,
-          'Error en el cáculo de precios del mercado libre.',
-        );
-        return;
-      }
-      var date = DateFormat('dd-MM-yyyy').parse(k);
-      mapDatePreciosLibre[date] = v;
-    });
-
-    // PRECIOS PVPC Y LIBRES
-    var sortedByKeymapDatePrecios = Map.fromEntries(
-      mapDatePrecios.entries.toList()
-        ..sort((e1, e2) => e1.key.compareTo(e2.key)),
+    var getDatePreciosLibre = Comparador.getDatePreciosLibre(
+      mapFechaPreciosLibre,
     );
+    //var errorGetDatePreciosLibre = getDatePreciosLibre.error;
+    if (getDatePreciosLibre.error) {
+      if (!mounted) return;
+      SnackBarHelper.show(
+        context,
+        'Error en el cáculo de precios del mercado libre.',
+      );
+      return;
+    }
+    var mapDatePreciosLibre = getDatePreciosLibre.mapDatePreciosLibre;
+
+    /// PRECIOS PVPC Y LIBRES
 
     if (sharedPrefs.storageComparador) {
       mapDatePrecios.forEach((date, value) {
@@ -817,28 +710,45 @@ class _ComparadorState extends State<Comparador> {
       });
     }
 
-    var sortedByKeymapDatePreciosLibre = Map.fromEntries(
-      mapDatePreciosLibre.entries.toList()
-        ..sort((e1, e2) => e1.key.compareTo(e2.key)),
+    //List<DateTime> listaDates = Comparador.getListaDates(mapDateConsumos);
+    /*List<List<double>> listasConsumo = Comparador.getListasConsumo(
+      mapDateConsumos,
+    );
+     List<List<double>> listasPrecio = Comparador.getListasPrecio(
+      mapDatePrecios,
+    );
+    List<List<double>> listasPrecioLibre = Comparador.getListasPrecioLibre(
+      mapDatePreciosLibre,
+    );
+    */
+
+    Map<DateTime, List<double>> sortedByKey(
+      Map<DateTime, List<double>> mapDate,
+    ) => Map.fromEntries(
+      mapDate.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)),
     );
 
     List<DateTime> listaDates = mapDateConsumos.keys.toList();
     List<List<double>> listasConsumo = mapDateConsumos.values.toList();
-    List<List<double>> listasPrecio = sortedByKeymapDatePrecios.values.toList();
-    List<List<double>> listasPrecioLibre = sortedByKeymapDatePreciosLibre.values
-        .toList();
+    List<List<double>> listasPrecio = sortedByKey(
+      mapDatePrecios,
+    ).values.toList();
+    List<List<double>> listasPrecioLibre = sortedByKey(
+      mapDatePreciosLibre,
+    ).values.toList();
 
-    List<List<double>> listasConsumoXPrecio = getListasConsumoXPrecio(
-      listasPrecios: listasPrecio,
-      listasConsumos: listasConsumo,
-    );
-    List<List<double>> listasConsumoXPrecioLibre = getListasConsumoXPrecio(
-      listasPrecios: listasPrecioLibre,
-      listasConsumos: listasConsumo,
-    );
+    List<List<double>> listasConsumoXPrecio =
+        Comparador.getListasConsumoXPrecio(
+          listasPrecios: listasPrecio,
+          listasConsumos: listasConsumo,
+        );
+    List<List<double>> listasConsumoXPrecioLibre =
+        Comparador.getListasConsumoXPrecio(
+          listasPrecios: listasPrecioLibre,
+          listasConsumos: listasConsumo,
+        );
 
     if (listasConsumoXPrecio.isEmpty) {
-      //showSnackBar('Error en la obtención de los precios PVPC.');
       if (!mounted) return;
       SnackBarHelper.show(
         context,
@@ -847,7 +757,6 @@ class _ComparadorState extends State<Comparador> {
       return;
     }
     if (listasConsumoXPrecioLibre.isEmpty) {
-      //showSnackBar('Error en la obtención de los precios del mercado libre.');
       if (!mounted) return;
       SnackBarHelper.show(
         context,
@@ -856,34 +765,48 @@ class _ComparadorState extends State<Comparador> {
       return;
     }
 
-    /*Map<DateTime, List<double>> mapFechaConsumoXPrecio =
-        Map.fromIterables(listaDates, listasConsumoXPrecio);
-    Map<DateTime, List<double>> mapFechaConsumoXPrecioLibre =
-        Map.fromIterables(listaDates, listasConsumoXPrecioLibre);*/
-
-    double facturaConsumosPVPC = getFacturaConsumos(
-      listasConsumoXPrecio: listasConsumoXPrecio,
+    double facturaConsumosPVPC = Comparador.getFacturaConsumos(
+      listasConsumoXPrecio,
     );
-    double facturaConsumosLibre = getFacturaConsumos(
-      listasConsumoXPrecio: listasConsumoXPrecioLibre,
+    double facturaConsumosLibre = Comparador.getFacturaConsumos(
+      listasConsumoXPrecioLibre,
     );
 
     int dias = listaDates.length;
-    double facturaPotenciaPVPC =
-        (double.tryParse(controllerPotenciaPVPCPunta.text)! *
-            double.tryParse(controllerPotenciaPVPCPuntaPrecio.text)! *
-            dias) +
-        (double.tryParse(controllerPotenciaPVPCValle.text)! *
-            double.tryParse(controllerPotenciaPVPCVallePrecio.text)! *
-            dias);
-
-    double facturaPotenciaLibre =
-        (double.tryParse(controllerPotenciaLibrePunta.text)! *
-            double.tryParse(controllerPotenciaLibrePuntaPrecio.text)! *
-            dias) +
-        (double.tryParse(controllerPotenciaLibreValle.text)! *
-            double.tryParse(controllerPotenciaLibreVallePrecio.text)! *
-            dias);
+    var potenciaPVPCPunta = double.tryParse(controllerPotenciaPVPCPunta.text)!;
+    var potenciaPVPCPuntaPrecio = double.tryParse(
+      controllerPotenciaPVPCPuntaPrecio.text,
+    )!;
+    var potenciaPVPCValle = double.tryParse(controllerPotenciaPVPCValle.text)!;
+    var potenciaPVPCVallePrecio = double.tryParse(
+      controllerPotenciaPVPCVallePrecio.text,
+    )!;
+    double facturaPotenciaPVPC = Comparador.facturaPotencia(
+      dias,
+      potenciaPVPCPunta,
+      potenciaPVPCPuntaPrecio,
+      potenciaPVPCValle,
+      potenciaPVPCVallePrecio,
+    );
+    var potenciaLibrePunta = double.tryParse(
+      controllerPotenciaLibrePunta.text,
+    )!;
+    var potenciaLibrePuntaPrecio = double.tryParse(
+      controllerPotenciaLibrePuntaPrecio.text,
+    )!;
+    var potenciaLibreValle = double.tryParse(
+      controllerPotenciaLibreValle.text,
+    )!;
+    var potenciaLibreVallePrecio = double.tryParse(
+      controllerPotenciaLibreVallePrecio.text,
+    )!;
+    double facturaPotenciaLibre = Comparador.facturaPotencia(
+      dias,
+      potenciaLibrePunta,
+      potenciaLibrePuntaPrecio,
+      potenciaLibreValle,
+      potenciaLibreVallePrecio,
+    );
 
     if (mounted) {
       Navigator.push(
@@ -892,90 +815,14 @@ class _ComparadorState extends State<Comparador> {
           builder: (context) => Resultado(
             fechas: listaDates,
             facturaConsumosPVPC: facturaConsumosPVPC,
+            // * 1000,
             facturaPotenciaPVPC: facturaPotenciaPVPC,
             facturaConsumosLibre: facturaConsumosLibre,
+            // * 1000,
             facturaPotenciaLibre: facturaPotenciaLibre,
           ),
         ),
       );
     }
-  }
-
-  /*({String fecha1, String fecha2}) getRangoFormat(List<String> fechas) {
-    //{13/02/2025, 14/02/2025,
-    var inputFormat = DateFormat('dd-MM-yyyy');
-    DateTime date1 = inputFormat.parse(fechas.first); // 00:00:00
-    DateTime date2 = inputFormat.parse(fechas.last);
-    String fecha1 = DateFormat('yyyy-MM-dd').format(date1);
-    String fecha2 = DateFormat('yyyy-MM-dd').format(date2);
-    return (fecha1: fecha1, fecha2: fecha2);
-  }*/
-
-  ({String? fecha1, String? fecha2}) getRangoDates(List<DateTime> dates) {
-    if (dates.last.isBefore(dates.first)) {
-      return (fecha1: null, fecha2: null);
-    }
-    String fecha1 = DateFormat('yyyy-MM-dd').format(dates.first);
-    String fecha2 = DateFormat('yyyy-MM-dd').format(dates.last);
-    return (fecha1: fecha1, fecha2: fecha2);
-  }
-
-  int? getIndex(List encabezados, String keyHead) {
-    int? index;
-    for (var field in encabezados) {
-      if (field is String && field.contains(keyHead)) {
-        index = encabezados.indexOf(field);
-      }
-    }
-    return index;
-  }
-
-  ({String keyFecha, String keyConsumo}) getKeysHead(List head) {
-    String keyFecha = '';
-    String keyConsumo = '';
-    for (var field in head) {
-      if (field.toLowerCase().contains('fecha') ||
-          field.toLowerCase().contains('data')) {
-        keyFecha = field;
-      }
-      if (field.toLowerCase().contains('consumo') ||
-          field.toLowerCase().contains('ae_kwh')) {
-        keyConsumo = field;
-      }
-    }
-    return (keyFecha: keyFecha, keyConsumo: keyConsumo);
-  }
-
-  List<List<double>> getListasConsumoXPrecio({
-    required List<List<double>> listasPrecios,
-    required List<List<double>> listasConsumos,
-  }) {
-    List<List<double>> listasConsumoXPrecio = [];
-    try {
-      for (var i = 0; i < listasConsumos.length; i++) {
-        List<double> listaConsumoXPrecio = [];
-        var listaPrecio = listasPrecios[i];
-        var listaConsumo = listasConsumos[i];
-        for (var j = 0; j < listaConsumo.length; j++) {
-          double precioXConsumo = listaPrecio[j] * listaConsumo[j];
-          listaConsumoXPrecio.add(precioXConsumo);
-        }
-        listasConsumoXPrecio.add(listaConsumoXPrecio);
-      }
-    } catch (e) {
-      return [];
-    }
-    return listasConsumoXPrecio;
-  }
-
-  double getFacturaConsumos({
-    required List<List<double>> listasConsumoXPrecio,
-  }) {
-    double facturaConsumos = 0;
-    for (var lista in listasConsumoXPrecio) {
-      var sumaLista = lista.reduce((v, e) => v + e);
-      facturaConsumos = facturaConsumos + sumaLista;
-    }
-    return facturaConsumos;
   }
 }

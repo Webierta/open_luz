@@ -18,7 +18,7 @@ enum NavDestinations {
   comparador(
     texto: 'Comparador',
     icon: Icons.difference,
-    destino: Comparador(),
+    destino: ComparadorScreen(),
   ),
   etiqueta(
     texto: 'Eqiqueta energética',
