@@ -2,33 +2,47 @@
 
 Este archivo registra y documenta los cambios más notables a lo largo del desarrollo del proyecto.
 
-## [2.0.6] - 2026-09-30
+## [2.0.7] - 2025-10-04
+
+### Added
+
+- Añadido importe oficial de potencia (peaje y cargos) de cada año.
+
+### Changed
+
+- Optimizado Comparador de facturas.
+
+### Fixed
+
+- Fixed Changelog.
+
+## [2.0.6] - 2025-09-30
 
 ### Changed
 
 - Correcciones menores y pequeños ajustes. 
 
-## [2.0.5] - 2026-09-26
+## [2.0.5] - 2025-09-26
 
 ### Fixed
 
 - Set Flutter version in pubspec.yaml file.
 - Apk Signing Config conditional.
 
-## [2.0.4] - 2026-09-25
+## [2.0.4] - 2025-09-25
 
 ### Fixed
 
-- Fixed: window minimum size (Linux)
+- Fixed: window minimum size (Linux).
 
-## [2.0.3] - 2026-09-25
+## [2.0.3] - 2025-09-25
 
 ### Fixed
 
 - Fixed build apk from debug to release.
 - Sign the app.
 
-## [2.0.2] - 2026-09-25
+## [2.0.2] - 2025-09-25
 
 ### Added
 
@@ -59,6 +73,7 @@ Este archivo registra y documenta los cambios más notables a lo largo del desar
 - First beta release.
 - Continuación y revisión del Proyecto del mismo autor [Tarifa Luz](https://github.com/Webierta/tarifa_luz).
 
+[2.0.7]: https://github.com/Webierta/open_luz/compare/v2.0.6...v2.0.7
 [2.0.6]: https://github.com/Webierta/open_luz/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/Webierta/open_luz/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/Webierta/open_luz/compare/v2.0.3...v2.0.4
