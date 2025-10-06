@@ -6,7 +6,7 @@
 
 # Miscellaneous
 *.class
-*.lock
+#*.lock
 *.log
 *.pyc
 *.swp
@@ -61,7 +61,7 @@ flutter_*.png
 linked_*.ds
 unlinked.ds
 unlinked_spec.ds
-pubspec.lock
+#pubspec.lock
 
 # Local configuration file (sdk path, etc)
 local.properties
