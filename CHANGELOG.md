@@ -2,6 +2,13 @@
 
 Este archivo registra y documenta los cambios más notables a lo largo del desarrollo del proyecto.
 
+## [2.0.8] - 2025-10-07
+
+### Added
+
+- Set flutter version.
+- Add file pubspec.lock.
+
 ## [2.0.7] - 2025-10-04
 
 ### Added
@@ -73,6 +80,7 @@ Este archivo registra y documenta los cambios más notables a lo largo del desar
 - First beta release.
 - Continuación y revisión del Proyecto del mismo autor [Tarifa Luz](https://github.com/Webierta/tarifa_luz).
 
+[2.0.8]: https://github.com/Webierta/open_luz/compare/v2.0.7...v2.0.8
 [2.0.7]: https://github.com/Webierta/open_luz/compare/v2.0.6...v2.0.7
 [2.0.6]: https://github.com/Webierta/open_luz/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/Webierta/open_luz/compare/v2.0.4...v2.0.5

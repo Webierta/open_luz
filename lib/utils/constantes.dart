@@ -1,5 +1,5 @@
 // APP
-const String kVersion = '2.0.7';
+const String kVersion = '2.0.8';
 const String localeEs = 'es_ES';
 
 // DATA BASE
